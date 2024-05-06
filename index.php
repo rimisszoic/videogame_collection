@@ -1,135 +1,134 @@
-<?php
-echo '<!DOCTYPE html>';
-echo '<html lang="es">';
-echo '<head>';
-echo '    <meta charset="UTF-8">';
-echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">';
-echo '    <title>Videojuegos</title>';
-echo '    <!-- Bootstrap CSS -->';
-echo '    <link rel="stylesheet" href="' . BOOTSTRAP . 'bootstrap.min.css">';
-echo '    <link rel="stylesheet" href="' . JS . 'bootstrap-notify/bootstrap-notify.min.js">';
-echo '</head>';
-echo '<body>';
-echo '';
-echo '    <!-- Navbar -->';
-echo '    <nav class="navbar navbar-expand-lg navbar-light bg-light">';
-echo '        <div class="container-fluid">';
-echo '            <a class="navbar-brand" href="#">Videojuegos</a>';
-echo '            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">';
-echo '                <span class="navbar-toggler-icon"></span>';
-echo '            </button>';
-echo '            <div class="collapse navbar-collapse" id="navbarNav">';
-echo '                <ul class="navbar-nav">';
-echo '                    <?php if(isset($_SESSION[\'user_id\'])): ?>';
-echo '                        <li class="nav-item dropdown">';
-echo '                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">';
-echo '                                <?php echo $_SESSION[\'nick\']; ?>';
-echo '                            </a>';
-echo '                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">';
-echo '                                <li><a class="dropdown-item" href="#">Perfil</a></li>';
-echo '                                <li><a class="dropdown-item" href="#">Colección</a></li>';
-echo '                            </ul>';
-echo '                        </li>';
-echo '                    <?php else: ?>';
-echo '                        <li class="nav-item">';
-echo '                            <button type="button" class="btn btn-link nav-link" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</button>';
-echo '                        </li>';
-echo '                    <?php endif; ?>';
-echo '                </ul>';
-echo '            </div>';
-echo '        </div>';
-echo '    </nav>';
-echo '';
-echo '    <!-- Login Modal -->';
-echo '    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">';
-echo '        <div class="modal-dialog">';
-echo '            <div class="modal-content">';
-echo '                <div class="modal-header">';
-echo '                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>';
-echo '                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
-echo '                </div>';
-echo '                <div class="modal-body">';
-echo '                    <form action="' . BASE_URL . '?route=login" method="post">';
-echo '                        <div class="mb-3">';
-echo '                            <label for="nick" class="form-label">Nick</label>';
-echo '                            <input type="text" class="form-control" id="nick" name="nick" required>';
-echo '                        </div>';
-echo '                        <div class="mb-3">';
-echo '                            <label for="password" class="form-label">Contraseña</label>';
-echo '                            <input type="password" class="form-control" id="password" name="password" required>';
-echo '                        </div>';
-echo '                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>';
-echo '                    </form>';
-echo '                    <div class="text-center mt-3">';
-echo '                        <p>¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate aquí</a></p>';
-echo '                    </div>';
-echo '                </div>';
-echo '            </div>';
-echo '        </div>';
-echo '    </div>';
-echo '';
-echo '    <!-- Register Modal -->';
-echo '    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">';
-echo '        <div class="modal-dialog">';
-echo '            <div class="modal-content">';
-echo '                <div class="modal-header">';
-echo '                    <h5 class="modal-title" id="registerModalLabel">Registrarse</h5>';
-echo '                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
-echo '                </div>';
-echo '                <div class="modal-body">';
-echo '                    <form action="' . BASE_URL . '?route=register" method="post">';
-echo '                        <div class="mb-3">';
-echo '                            <label for="name" class="form-label">Nombre</label>';
-echo '                            <input type="text" class="form-control" id="name" name="name" required>';
-echo '                        </div>';
-echo '                        <div class="mb-3">';
-echo '                            <label for="nick" class="form-label">Nick</label>';
-echo '                            <input type="text" class="form-control" id="registerNick" name="nick" required>';
-echo '                        </div>';
-echo '                        <div class="mb-3">';
-echo '                            <label for="dob" class="form-label">Fecha de Nacimiento</label>';
-echo '                            <input type="date" class="form-control" id="dob" name="dob" required>';
-echo '                        </div>';
-echo '                        <div class="mb-3">';
-echo '                            <label for="email" class="form-label">Correo electrónico</label>';
-echo '                            <input type="email" class="form-control" id="email" name="email" required>';
-echo '                        </div>';
-echo '                        <div class="mb-3">';
-echo '                            <label for="password" class="form-label">Contraseña</label>';
-echo '                            <input type="password" class="form-control" id="password" name="password" required>';
-echo '                        </div>';
-echo '                        <button type="submit" class="btn btn-primary">Registrarse</button>';
-echo '                    </form>';
-echo '                    <div class="text-center mt-3">';
-echo '                        <p>¿Ya tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Inicia sesión aquí</a></p>';
-echo '                    </div>';
-echo '                </div>';
-echo '            </div>';
-echo '        </div>';
-echo '    </div>';
-echo '';
-echo '    <!-- Bootstrap Bundle with Popper -->';
-echo '    <script src="' . BOOTSTRAP . 'bootstrap.bundle.min.js"></script>';
-echo '    <script src="' . JS . 'jquery/jquery-3.7.1.min.js"></script>';
-echo '    <script src="' . JS . 'bootstrap-notify/bootstrap-notify.min.js"></script>';
-echo '    <script>';
-echo '    $(document).ready(function() {';
-echo '        <?php if(isset($_GET[\'result\']) && isset($_GET[\'msg\'])): ?>';
-echo '            <?php if($_GET[\'result\'] === \'ok\'): ?>';
-echo '                showNotification("<?php echo $_GET[\'msg\']; ?>", "success");';
-echo '            <?php elseif($_GET[\'result\'] === \'error\'): ?>';
-echo '                showNotification("<?php echo $_GET[\'msg\']; ?>", "error");';
-echo '            <?php endif; ?>';
-echo '        <?php endif; ?>';
-echo '';
-echo '        function showNotification(message, type) {';
-echo '            $.notify({';
-echo '                message: message';
-echo '            },{';
-echo '                type: type';
-echo '            });';
-echo '        }';
-echo '    });';
-echo '    </script>';
-echo '</body>';
-echo '</html>';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videojuegos</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="<?php echo BOOTSTRAP; ?>bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Videojuegos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php echo $_SESSION['nick']; ?>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                                <li><a class="dropdown-item" href="#">Colección</a></li>
+                            </ul>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-link nav-link" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</button>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?php echo BASE_URL . '?route=login' ?>" method="post">
+                        <div class="mb-3">
+                            <label for="nick" class="form-label">Nick</label>
+                            <input type="text" class="form-control" id="nick" name="nick" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate aquí</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Registrarse</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?php echo BASE_URL . '?route=register' ?>" method="post">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nick" class="form-label">Nick</label>
+                            <input type="text" class="form-control" id="registerNick" name="nick" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dob" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="dob" name="dob" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>¿Ya tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Inicia sesión aquí</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="<?php echo BOOTSTRAP; ?>bootstrap.bundle.min.js"></script>
+    <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        <?php if(isset($_GET['result']) && isset($_GET['msg'])): ?>
+            <?php if($_GET['result'] === 'ok'): ?>
+                showNotification("<?php echo $_GET['msg']; ?>", "success");
+            <?php elseif($_GET['result'] === 'error'): ?>
+                showNotification("<?php echo $_GET['msg']; ?>", "error");
+            <?php endif; ?>
+        <?php endif; ?>
+
+        function showNotification(message, type) {
+            $.notify({
+                message: message
+            },{
+                type: type
+            });
+        }
+    });
+    </script>
+</body>
+</html>
