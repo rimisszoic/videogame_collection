@@ -44,10 +44,6 @@ class UserController {
         $user->logout();
     }
 
-    <?php
-require_once(MODEL.'User.php');
-
-class UserController {
     public function updateProfile()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
