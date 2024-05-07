@@ -1,6 +1,7 @@
 <?php
 session_start();
-include 'config/const.php';
+require_once('config/const.php');
+require_once('router.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -14,14 +15,14 @@ include 'config/const.php';
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light flex-row-reverse">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Videojuegos</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <?php if(isset($_SESSION['user_id'])): ?>
                         <li class="nav-item dropdown">
@@ -54,12 +55,12 @@ include 'config/const.php';
                 <div class="modal-body">
                     <form action="<?php echo BASE_URL . '?route=login' ?>" method="post">
                         <div class="mb-3">
-                            <label for="nick" class="form-label">Nick</label>
-                            <input type="text" class="form-control" id="nick" name="nick" required>
+                            <label for="loginNick" class="form-label">Nick</label>
+                            <input type="text" class="form-control" id="loginNick" name="nick" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" name="password" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
                     </form>
@@ -82,24 +83,24 @@ include 'config/const.php';
                 <div class="modal-body">
                     <form action="<?php echo BASE_URL . '?route=register' ?>" method="post">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <label for="registerName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="registerName" name="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="nick" class="form-label">Nick</label>
+                            <label for="registerNick" class="form-label">Nick</label>
                             <input type="text" class="form-control" id="registerNick" name="nick" required>
                         </div>
                         <div class="mb-3">
-                            <label for="dob" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="dob" name="dob" required>
+                            <label for="registerDob" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="registerDob" name="dob" required>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Correo electrónico</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <label for="registerEmail" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registerPassword" name="password" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Registrarse</button>
                     </form>
@@ -126,10 +127,34 @@ include 'config/const.php';
         <?php endif; ?>
 
         function showNotification(message, type) {
+            var title = (type && type === 'success') ? 'Éxito' : 'Error';
             $.notify({
-                message: message
+                title: title,
+                message: message,
+                icon: type === 'success' ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'
             },{
-                type: type
+                type: type,
+                element: 'body',
+                showProgressbar: false,
+                placement: {
+                    from: "top",
+                    align: "right"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 3300,
+                timer: 1000,
+                url_target: '_blank',
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutRight'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class'
             });
         }
     });

@@ -11,6 +11,10 @@ define('IMG','resources/images/');
 define('BOOTSTRAP','resources/bootstrap/'); // Modificada la constante BOOTSTRAP
 define('CONFIG','config/');
 
+// Definir las rutas para las acciones de los formularios
+define('LOGIN_ACTION', BASE_URL . '?route=login');
+define('REGISTER_ACTION', BASE_URL . '?route=register');
+
 // Función para codificar una URL (si es necesario)
 function encode_url($url) {
     return urlencode($url);

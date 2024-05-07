@@ -1,5 +1,6 @@
 <?php
 require_once(MODEL.'User.php');
+require_once(CONFIG.'const.php');
 
 class UserController {
     public function login()
