@@ -1,16 +1,15 @@
 <?php
 
 // Define las constantes del sistema
-define('ROOT', $_SERVER['DOCUMENT_ROOT'] . '/videogame_collection/');
-define('MODEL', ROOT . 'model/');
-define('VIEW', ROOT . 'resources/views/'); // Corregido el nombre del directorio de vistas
-define('CONTROLLER', ROOT . 'controller/');
-define('CSS', '/videogame_collection/resources/css/');
-define('JS', '/videogame_collection/resources/js/');
-define('IMG', '/videogame_collection/resources/images/');
 define('BASE_URL', '/videogame_collection/');
-define('BOOTSTRAP', 'videogame_collection/resources/bootstrap/');
-define('CONFIG', ROOT . 'config/');
+define('MODEL', 'model/');
+define('VIEW', 'resources/views/'); // Corregido el nombre del directorio de vistas
+define('CONTROLLER','controller/');
+define('CSS','resources/css/');
+define('JS','resources/js/');
+define('IMG','resources/images/');
+define('BOOTSTRAP','resources/bootstrap/'); // Modificada la constante BOOTSTRAP
+define('CONFIG','config/');
 
 // Función para codificar una URL (si es necesario)
 function encode_url($url) {

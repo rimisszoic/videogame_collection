@@ -1,3 +1,7 @@
+<?php
+session_start();
+include 'config/const.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,13 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Videojuegos</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="<?php echo BOOTSTRAP; ?>bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo BOOTSTRAP; ?>css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js">
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light flex-row-reverse">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Videojuegos</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,7 +112,7 @@
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
-    <script src="<?php echo BOOTSTRAP; ?>bootstrap.bundle.min.js"></script>
+    <script src="<?php echo BOOTSTRAP; ?>js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
     <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
     <script>
