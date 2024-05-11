@@ -16,22 +16,15 @@ class User {
 
     /**
      * Constructor de la clase User.
-     * @param string $fullName Nombre completo del usuario.
-     * @param string $nickName Nombre de usuario (nick).
-     * @param string $dateOfBirth Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
-     * @param string $email Correo electrónico del usuario.
-     * @param string $password Contraseña del usuario.
-     * @param int $role Rol del usuario.
-     * @param string $lastAccess Último acceso del usuario en formato 'YYYY-MM-DD HH:MM:SS'.
      */
-    public function __construct(string $fullName, string $nickName, string $dateOfBirth, string $email, string $password, int $role, string $lastAccess) {
-        $this->fullName = $fullName;
-        $this->nickName = $nickName;
-        $this->dateOfBirth = $dateOfBirth;
-        $this->email = $email;
-        $this->password = $password;
-        $this->role = $role;
-        $this->lastAccess = $lastAccess;
+    public function __construct() {
+        $this->fullName = "";
+        $this->nickName = "";
+        $this->dateOfBirth = "";
+        $this->email = "";
+        $this->password = "";
+        $this->role = 0;
+        $this->lastAccess = "";
     }
 
     /**
@@ -40,20 +33,22 @@ class User {
      * @param string $password Contraseña del usuario.
      */
     public function logUser(string $nickName, string $password): void {
-        $conn = new Connection();
-        $conn->connect();
-        $query = "SELECT id, role FROM user WHERE nickName = '$nickName' AND password = '$password'";
-        $result = $conn->query($query);
-        $conn->close();
-        if($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['user_role'] = $row['role'];
-            $_SESSION['result'] = true;
-            header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha logueado correctamente'));
-        } else {
-            $_SESSION['result'] = false;
-            header(encode_url('Location: '.BASE_URL.'?result=error&msg=Usuario o contraseña incorrectos'));
+        try{
+            $conn = new Connection();
+            $conn->connect();
+            $query = "SELECT id, rol FROM usuarios WHERE nombre_usuario = '$nickName' AND password = '$password'";
+            $result = $conn->query($query);
+            $conn=null;
+            if($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $_SESSION['user_id'] = $row['id'];
+                $_SESSION['user_role'] = $row['rol'];
+                header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha logueado correctamente'));
+            } else {
+                header(encode_url('Location: '.BASE_URL.'?result=error&msg=Usuario o contraseña incorrectos'));
+            }
+        } catch (Exception $e) {
+            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
         }
     }
 
@@ -75,18 +70,21 @@ class User {
      * @param string $password Contraseña del usuario.
      */
     public function createUser(string $name, string $nick, string $dob, string $email, string $password): void {
-        $conn = new Connection();
-        $conn->connect();
-        $query = "SELECT * FROM user WHERE email = '$email' OR nick = '$nick'";
-        $result = $conn->query($query);
-        if($result->num_rows > 0) {
-            $_SESSION['result'] = false;
-        } else {
-            $query = "INSERT INTO user (name, nick, dob, email, password) VALUES ('$name', '$nick', '$dob', '$email', '$password')";
-            $conn->query($query);
-            $_SESSION['result'] = true;
+        try{
+            $conn = new Connection();
+            $conn->connect();
+            $query = "SELECT * FROM user WHERE email = '$email' OR nick = '$nick'";
+            $result = $conn->query($query);
+            if($result->num_rows > 0) {
+                $_SESSION['result'] = false;
+            } else {
+                $query = "INSERT INTO user (name, nick, dob, email, password) VALUES ('$name', '$nick', '$dob', '$email', '$password')";
+                $conn->query($query);
+                $_SESSION['result'] = true;
+            }
+        } catch (Exception $e) {
+            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
         }
-        $conn->close();
     }
 
     /**

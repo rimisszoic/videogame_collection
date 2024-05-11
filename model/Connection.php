@@ -8,7 +8,7 @@ class Connection extends Database
     public function __construct()
     {
         // Llamar al constructor de la clase padre
-        parent::__construct("localhost", "gam3Coll@bUs3r", "J4nR#9!pQz_23Ld", "videogame_collection", "utf8");
+        parent::__construct("localhost", "gam3Coll@bUs3r", "J4nR#9!pQz_23Ld", "utf8mb4","videogame_collection");
     }
 }
 ?>

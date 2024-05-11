@@ -18,6 +18,10 @@ class UserController {
                 header('Location: ' . BASE_URL . '?result=error&msg=Usuario o contraseña incorrectos');
                 exit();
             }
+        } else {
+            // Si la solicitud no es POST, redirigir a la página principal
+            header('Location: ' . BASE_URL);
+            exit();
         }
     }
 
@@ -36,6 +40,10 @@ class UserController {
                 header('Location: ' . BASE_URL . '?result=error&msg=Error al registrar el usuario');
                 exit();
             }
+        } else {
+            // Si la solicitud no es POST, redirigir a la página principal
+            header('Location: ' . BASE_URL);
+            exit();
         }
     }
 
