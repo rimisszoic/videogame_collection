@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once('config/const.php');
-require_once('router.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,6 +11,8 @@ require_once('router.php');
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="<?php echo BOOTSTRAP; ?>css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo CSS; ?>passwords.css">
 </head>
 <body>
 
@@ -53,15 +54,21 @@ require_once('router.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo BASE_URL . '?route=login' ?>" method="post">
+                    <form action="router.php" method="post">
                         <div class="mb-3">
                             <label for="loginNick" class="form-label">Nick</label>
                             <input type="text" class="form-control" id="loginNick" name="nick" required>
                         </div>
                         <div class="mb-3">
                             <label for="loginPassword" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="loginPassword" name="password" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="loginPassword" name="password" required>
+                                <button class= type="button"class="password-toggle-icon">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
+                        <input type="hidden" name="action" value="login">
                         <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
                     </form>
                     <div class="text-center mt-3">
@@ -81,7 +88,7 @@ require_once('router.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo BASE_URL . '?route=register' ?>" method="post">
+                    <form action="router.php" method="post">
                         <div class="mb-3">
                             <label for="registerName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="registerName" name="name" required>
@@ -100,8 +107,43 @@ require_once('router.php');
                         </div>
                         <div class="mb-3">
                             <label for="registerPassword" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="registerPassword" name="password" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="registerPassword" name="registerPassword" required>
+                                <button type="button" class="password-toggle-icon">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar"></div>
+                                <div class="strength-text"></div>
+                            </div>
+                            <div id="passwordValidity">
+                                <span class="hint">Debe contener al menos 8 caracteres</span>
+                                <span class="hint">Debe contener al menos un número</span>
+                                <span class="hint">Debe contener al menos una letra mayúscula</span>
+                                <span class="hint">Debe contener al menos un carácter especial</span>
+                            </div>
                         </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                <button type="button" class="password-toggle-icon">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar"></div>
+                                <div class="strength-text"></div>
+                            </div>
+                            <div id="passwordValidity">
+                                <span class="hint">Debe contener al menos 8 caracteres</span>
+                                <span class="hint">Debe contener al menos un número</span>
+                                <span class="hint">Debe contener al menos una letra mayúscula</span>
+                                <span class="hint">Debe contener al menos un carácter especial</span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="action" value="register">
                         <button type="submit" class="btn btn-primary">Registrarse</button>
                     </form>
                     <div class="text-center mt-3">
@@ -116,48 +158,7 @@ require_once('router.php');
     <script src="<?php echo BOOTSTRAP; ?>js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
     <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        <?php if(isset($_GET['result']) && isset($_GET['msg'])): ?>
-            <?php if($_GET['result'] === 'ok'): ?>
-                showNotification("<?php echo $_GET['msg']; ?>", "success");
-            <?php elseif($_GET['result'] === 'error'): ?>
-                showNotification("<?php echo $_GET['msg']; ?>", "error");
-            <?php endif; ?>
-        <?php endif; ?>
-
-        function showNotification(message, type) {
-            var title = (type && type === 'success') ? 'Éxito' : 'Error';
-            $.notify({
-                title: title,
-                message: message,
-                icon: type === 'success' ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove'
-            },{
-                type: type,
-                element: 'body',
-                showProgressbar: false,
-                placement: {
-                    from: "top",
-                    align: "right"
-                },
-                offset: 20,
-                spacing: 10,
-                z_index: 1031,
-                delay: 3300,
-                timer: 1000,
-                url_target: '_blank',
-                animate: {
-                    enter: 'animated fadeInDown',
-                    exit: 'animated fadeOutRight'
-                },
-                onShow: null,
-                onShown: null,
-                onClose: null,
-                onClosed: null,
-                icon_type: 'class'
-            });
-        }
-    });
-    </script>
+    <script src="<?php echo JS; ?>notifications.js"></script>
+    <script src="<?php echo JS; ?>passwords.js"></script>
 </body>
 </html>
