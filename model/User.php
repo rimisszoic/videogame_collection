@@ -8,11 +8,11 @@ class User {
     // Propiedades de la clase User
     private string $fullName;
     private string $nickName;
-    private string $dateOfBirth;
+    private date $dateOfBirth;
     private string $email;
     private string $password;
     private int $role;
-    private string $lastAccess;
+    private date $lastAccess;
 
     /**
      * Constructor de la clase User.
@@ -34,15 +34,24 @@ class User {
      */
     public function logUser(string $nickName, string $password): void {
         try{
+            $password = md5($password);
             $conn = new Connection();
             $conn->connect();
-            $query = "SELECT id, rol FROM usuarios WHERE nombre_usuario = '$nickName' AND password = '$password'";
+            $query = "SELECT * FROM usuarios WHERE nombre_usuario = '$nickName' AND password = '$password'";
             $result = $conn->query($query);
             $conn=null;
             if($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['user_role'] = $row['rol'];
+                $_SESSION['user_nick'] = $nickName;
+                $_SESSION['result'] = true;
+                $this->setFullName($row['nombre']);
+                $this->setNickName($nickName);
+                $this->setDateOfBirth($row['fecha_nacimiento']);
+                $this->setEmail($row['email']);
+                $this->setPassword($password);
+                $this->setLastAccess($_SESSION['user_id']);
                 header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha logueado correctamente'));
             } else {
                 header(encode_url('Location: '.BASE_URL.'?result=error&msg=Usuario o contraseña incorrectos'));
@@ -56,6 +65,7 @@ class User {
      * Método para desloguear un usuario.
      */
     public function unlogUser(): void {
+        $this->setLastAccess($_SESSION['user_id']);
         session_destroy();
         // Recargar la vista
         header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha deslogueado correctamente'));
@@ -65,11 +75,12 @@ class User {
      * Método para crear un usuario.
      * @param string $name Nombre completo del usuario.
      * @param string $nick Nombre de usuario (nick).
-     * @param string $dob Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
+     * @param date $dob Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
      * @param string $email Correo electrónico del usuario.
      * @param string $password Contraseña del usuario.
+     * @param string $confirmPassword Confirmación de la contraseña del usuario.
      */
-    public function createUser(string $name, string $nick, string $dob, string $email, string $password): void {
+    public function createUser(string $name, string $nick, date $dob, string $email, string $password, string $confirmPassword): void {
         try{
             $conn = new Connection();
             $conn->connect();
@@ -78,9 +89,41 @@ class User {
             if($result->num_rows > 0) {
                 $_SESSION['result'] = false;
             } else {
-                $query = "INSERT INTO user (name, nick, dob, email, password) VALUES ('$name', '$nick', '$dob', '$email', '$password')";
+                if($password === $confirmPassword){
+                    $this->setPassword(md5($password));
+                } else {
+                    header(encode_url('Location: '.BASE_URL.'?result=error&msg=Las contraseñas no coinciden'));
+                }
+
+                // Verificar si el nombre comoleto contiene un espacio en blanco
+                if(strpos($name, ' ') !== false){
+                    // Si el nombre completo contiene al menos un espacio en blanco
+                    $parts=explode("", $name);
+
+                    // Nombre y apellidos
+                    $firstName = ucfirst($parts[0]); // Nombre
+                    $lastName = implode(" ",array_map('ucfirst',array_slice($parts,1))); // Apellidos
+                    $fullNameFormated = $firstName." ".$lastName;
+                    $this->setFullName($fullNameFormated);
+                } else {
+                    // Si el nombre completo no contiene espacios en blanco
+                    $fullNameFormated = ucfirst($name);
+                    $this->setFullName($fullNameFormated);
+                }
+
+                $this->setNickName($nick);
+                $this->setEmail($email);
+                $this->setDateOfBirth($dob);
+                $queryRol="SELECT id FROM roles WHERE nombre='registrado'";
+                $resultRol=$conn->query($queryRol);
+                $rowRol=$resultRol->fetch_assoc();
+                $this->setLocalRole($rowRol['id']);
+                $query = "INSERT INTO user (name, nick, dob, email, password, rol) VALUES ('$this->getFullName()', '$this->getNickName()', '$this->getNickName()', '$email->getEmail()', '$this->getPassword()','$this->getLocalRole()')";
                 $conn->query($query);
                 $_SESSION['result'] = true;
+                $_SESSION['user_id'] = $conn->getLastId();
+                $_SESSION['user_role'] = $this->getLocalRole();
+                $_SESSION['user_nick'] = $this->getNickName();
             }
         } catch (Exception $e) {
             header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
@@ -91,16 +134,33 @@ class User {
      * Método para actualizar un usuario.
      * @param string $name Nombre completo del usuario.
      * @param string $nick Nombre de usuario (nick).
-     * @param string $dob Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
+     * @param date $dob Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
      * @param string $email Correo electrónico del usuario.
      * @param string $password Contraseña del usuario.
+     * @param string $confirmPassword Confirmación de la contraseña del usuario.
      */
-    public function updateUser(string $name, string $nick, string $dob, string $email, string $password): void {
-        $conn = new Connection();
-        $conn->connect();
-        $query = "UPDATE user SET name = '$name', nick = '$nick', dob = '$dob', email = '$email', password = '$password' WHERE id = ".$_SESSION['id'];
-        $conn->query($query);
-        $conn->close();
+    public function updateUser(string $name, string $nick, date $dob, string $email, string $password, string $confirmPassword): void {
+        $this->setFullName($name);
+        $this->setNickName($nick);
+        $this->setDateOfBirth($dob);
+        $this->setEmail($email);
+
+        // Comprobar si las contraseñas coinciden
+        if($password === $confirmPassword){
+            $this->setPassword(md5($password));
+        } else {
+            header(encode_url('Location: '.BASE_URL.'?result=error&msg=Las contraseñas no coinciden'));
+        }
+        $this->setLastAccess($_SESSION['id']);
+
+        try{
+            $conn = new Connection();
+            $conn->connect();
+            $query = "UPDATE user SET name = '$this->getFullName', nick = '$this->getNickName', dob = '$this->getDateOfBirth', email = '$this->getEmail', password = '$this->getPassword' WHERE id = ".$_SESSION['id'];
+            $conn->query($query);
+        } catch (Exception $e) {
+            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+        }
     }
 
     /**
@@ -164,6 +224,7 @@ class User {
         $query = "UPDATE user SET role_id = $roleId WHERE id = $userId";
         $conn->query($query);
         $conn->close();
+        $this->setLocalRole($roleId);
     }
 
     /**
@@ -214,6 +275,7 @@ class User {
         $query = "UPDATE user SET last_access = NOW() WHERE id = $userId";
         $conn->query($query);
         $conn->close();
+        $this->setLocalLastAccess(date('Y-m-d H:i:s'));
     }
 
     // Getters y Setters
@@ -254,7 +316,7 @@ class User {
      * Método para obtener la fecha de nacimiento del usuario.
      * @return string Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
      */
-    public function getDateOfBirth(): string {
+    public function getDateOfBirth(): date {
         return $this->dateOfBirth;
     }
 
@@ -263,7 +325,7 @@ class User {
      * @param string $dateOfBirth Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
      */
     public function setDateOfBirth(string $dateOfBirth): void {
-        $this->dateOfBirth = $dateOfBirth;
+        $this->dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
     }
 
     /**
@@ -318,7 +380,7 @@ class User {
      * Método para obtener el último acceso del usuario.
      * @return string Fecha y hora del último acceso en formato 'YYYY-MM-DD HH:MM:SS'.
      */
-    public function getLocalLastAccess(): string {
+    public function getLocalLastAccess(): date {
         return $this->lastAccess;
     }
 
@@ -326,8 +388,8 @@ class User {
      * Método para establecer el último acceso del usuario.
      * @param string $lastAccess Fecha y hora del último acceso en formato 'YYYY-MM-DD HH:MM:SS'.
      */
-    public function setLocalLastAccess(string $lastAccess): void {
-        $this->lastAccess = $lastAccess;
+    public function setLocalLastAccess(date $lastAccess): void {
+        $this->lastAccess = date('Y-m-d H:i:s', strtotime($lastAccess));
     }
 }
 ?>

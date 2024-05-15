@@ -30,7 +30,7 @@ class UserController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Validar y procesar datos de registro
             $user = new User();
-            $result = $user->createUser($_POST['name'], $_POST['nick'], $_POST['dob'], $_POST['email'], $_POST['password']);
+            $result = $user->createUser($_POST['name'], $_POST['nick'], $_POST['dob'], $_POST['email'], $_POST['resgisterPassword'], $_POST['confirmPassword']);
             if ($result) {
                 // Redirigir al inicio de sesión si el registro es exitoso
                 header('Location: ' . BASE_URL . '?result=ok&msg=El usuario se ha registrado correctamente');
@@ -65,7 +65,7 @@ class UserController {
             else {
                 // Validar y procesar datos de actualización del perfil
                 $user = new User();
-                $user->updateUser($_POST['name'], $_POST['nick'], $_POST['dob'], $_POST['email'], $_POST['password']);
+                $user->updateUser($_POST['name'], $_POST['nick'], $_POST['dob'], $_POST['email'], $_POST['password'], $_POST['confirmPassword']);
                 
                 // Redirigir a la página de perfil de usuario
                 header('Location: ' . BASE_URL . '?route=profile');
