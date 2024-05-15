@@ -35,14 +35,15 @@ require_once('config/const.php');
                                 <?php echo $_SESSION['nick']; ?>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-user" aria-hidden="true"></i>Perfil</a></li>
                                 <li><a class="dropdown-item" href="#">Colección</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <button type="button" class="btn btn-link nav-link" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión
-                            </button>
+                            <button type="button" class="btn btn-success rounded" data-bs-toggle="modal" data-bs-target="#loginModal">Entrar</button>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -132,13 +133,12 @@ require_once('config/const.php');
                             <div class="pswd_info">
                                 <div class="notify error">La contraseña debe cumplir los siguientes requisitos:</div>
                                 <ul>
-                                    <li id="letter" class="invalid"><i class="fas fa-times"></i>Al menos <strong>una letra</strong></li>
-                                    <li id="capital" class="invalid"><i class="fas fa-times"></i>Al menos <strong>una letra mayúscula</strong></li>
-                                    <li id="number" class="invalid"><i class="fas fa-times"></i>Al menos <strong>un número</strong></li>
-                                    <li id="length" class="invalid"><i class="fas fa-times"></i>Al menos <strong>8 caracteres</strong></li>
-                                    <li id="null" class="invalid"><i class="fas fa-times"></i>Debe <strong>confirmar la contraseña</strong></li>
-                                    <li id="match" class="invalid"><i class="fas fa-times"></i>Las contraseñas <strong>deben coincidir</strong></li>
-                                    <li id="blank" class="invalid"><i class="fas fa-times"></i>Las contraseñas <strong>no deben tener espacios</strong></li>
+                                    <li id="letter" class="invalid">Al menos <strong>una letra</strong></li>
+                                    <li id="capital" class="invalid">Al menos <strong>una letra mayúscula</strong></li>
+                                    <li id="number" class="invalid">Al menos <strong>un número</strong></li>
+                                    <li id="length" class="invalid">Al menos <strong>8 caracteres</strong></li>
+                                    <li id="match" class="invalid">Las contraseñas <strong>deben coincidir</strong></li>
+                                    <li id="blank" class="invalid">Las contraseñas <strong>no deben tener espacios</strong></li>
                                 </ul>
                             </div>
                             <div id="registerPasswordHelp" class="form-text"></div>
