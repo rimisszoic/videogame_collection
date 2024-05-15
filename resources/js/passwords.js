@@ -1,39 +1,49 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const passwordInputs = document.querySelectorAll('.form-control[type="password"]');
     const eyeIcons = document.querySelectorAll('.password-toggle-icon');
 
-    eyeIcons.forEach(function(icon, index) {
+    eyeIcons.forEach((icon, index) => {
         icon.addEventListener('click', function() {
             const passwordInput = passwordInputs[index];
-            togglePasswordVisibility(passwordInput, this);
+            togglePasswordVisibility(passwordInput, icon);
         });
     });
 
-    passwordInputs.forEach(function(input) {
-        input.addEventListener('focus', function() {
-            const passwordTooltip = this.querySelector('.pswd_info');
-            if (passwordTooltip) {
-                const tooltipPosition = this.getBoundingClientRect();
-                passwordTooltip.style.top = tooltipPosition.bottom + 'px';
-                passwordTooltip.classList.add('active');
+    passwordInputs.forEach((input) => {
+        input.addEventListener('focus', function(event) {
+            let parent = event.target.parentElement;
+            while (parent) {
+                const passwordTooltip = parent.querySelector('.pswd_info');
+                if (passwordTooltip) {
+                    const tooltipPosition = event.target.getBoundingClientRect();
+                    passwordTooltip.style.top = tooltipPosition.bottom + 'px';
+                    passwordTooltip.classList.add('active');
+                    break;
+                }
+                parent = parent.parentElement;
             }
         });
 
-        input.addEventListener('blur', function() {
-            const passwordTooltip = this.querySelector('.pswd_info');
-            if (passwordTooltip) {
-                passwordTooltip.classList.remove('active');
+        input.addEventListener('blur', function(event) {
+            let parent = event.target.parentElement;
+            while (parent) {
+                const passwordTooltip = parent.querySelector('.pswd_info');
+                if (passwordTooltip) {
+                    passwordTooltip.classList.remove('active');
+                    break;
+                }
+                parent = parent.parentElement;
             }
         });
 
-        input.addEventListener('keyup', function() {
-            const password = this.value;
-            const p1 = document.getElementById('registerPassword');
-            const p2 = document.getElementById('confirmPassword');
+        input.addEventListener('keyup', function(event) {
+            const password = event.target.value;
+            const p1 = document.getElementById('registerPassword').value;
+            const p2 = document.getElementById('confirmPassword').value;
             const noValido = /\s/;
 
             // Validar longitud de contraseña
-            if(password.length<8){
+            if (password.length < 8) {
                 document.getElementById('length').classList.remove('valid');
                 document.getElementById('length').classList.add('invalid');
             } else {
@@ -42,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Validar letras
-            if(password.match(/[A-z]/)){
+            if (password.match(/[A-z]/)) {
                 document.getElementById('letter').classList.remove('invalid');
                 document.getElementById('letter').classList.add('valid');
             } else {
@@ -51,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Validar mayúsculas
-            if(password.match(/[A-Z]/)){
+            if (password.match(/[A-Z]/)) {
                 document.getElementById('capital').classList.remove('invalid');
                 document.getElementById('capital').classList.add('valid');
             } else {
@@ -60,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Validar números
-            if(password.match(/\d/)){
+            if (password.match(/\d/)) {
                 document.getElementById('number').classList.remove('invalid');
                 document.getElementById('number').classList.add('valid');
             } else {
@@ -69,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Validar espacios
-            if(noValido.test(p1) || noValido.test(p2)){
+            if (noValido.test(p1) || noValido.test(p2)) {
                 document.getElementById('blank').classList.remove('valid');
                 document.getElementById('blank').classList.add('invalid');
             } else {
@@ -78,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Validar contraseñas iguales
-            if(p1.value!==p2.value){
+            if (p1 !== p2) {
                 document.getElementById('match').classList.remove('valid');
                 document.getElementById('match').classList.add('invalid');
             } else {
@@ -92,8 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const registerStrengthContainer = document.querySelector('.password-strength');
 
     if (registerPasswordInput && registerStrengthContainer) {
-        registerPasswordInput.addEventListener('input', function() {
-            const password = this.value;
+        registerPasswordInput.addEventListener('input', function(event) {
+            const password = event.target.value;
             const strengthText = registerStrengthContainer.querySelector('.strength-text');
             const strengthBar = registerStrengthContainer.querySelector('.strength-bar');
 
