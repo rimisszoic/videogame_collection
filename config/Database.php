@@ -1,4 +1,7 @@
 <?php
+require_once(MODEL.'Mailer.php');
+use MODEL\Mailer; // Add the missing import statement
+
 // Clase base para manejar la conexión y las operaciones con la base de datos
 class Database
 {
@@ -8,15 +11,21 @@ class Database
     private $charset;
     private $dbname;
     private $conn;
+    private $logFile;
+    private $adminEmail;
+    private $mailer;
 
     // Constructor de la clase
-    public function __construct($servername, $username, $password, $charset, $dbname)
+    public function __construct($servername, $username, $password, $charset, $dbname, $logFile=LOGS . 'errors.log', $adminEmail="rimiss@rimisszoic.live")
     {
         $this->servername = $servername;
         $this->username = $username;
         $this->password = $password;
         $this->charset = $charset;
         $this->dbname = $dbname;
+        $this->logFile = $logFile;
+        $this->adminEmail = $adminEmail;
+        $this->mailer = new Mailer();
     }
 
     /**
@@ -30,7 +39,7 @@ class Database
             $this->conn = new PDO($dsn, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            error_log("Connection failed: " . $e->getMessage());
+            $this->handleError("Connection failed: ".$e->getMessage());
             throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");
         }
     }
@@ -46,9 +55,31 @@ class Database
         try {
             return $this->conn->query($query);
         } catch (PDOException $e) {
-            error_log("Query failed: " . $e->getMessage());
+            $this->handleError("Query failed: ".$e->getMessage());
             throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");
         }
+    }
+
+    /**
+     * Método para manejar los errores en un archivo y enviar correos electrónicos al administrador
+     * @param string $message Mensaje de error
+     * @throws Exception Siempre se lanza una excepción después de manejar el error
+     */
+    private function handleError($message)
+    {
+        // Registrar el error en un archivo de logs
+        error_log("Database Error: " . $message.PHP_EOL, 3, $this->logFile);
+
+        // Enviar un correo electrónico al administrador
+        try{
+            $subjet="Error en la aplicación";
+            $template=$this->mailer->loadTemplate(RESOURCES.'templates/error_email.html', ['errorMessage'=>$message]);
+            $this->mailer->sendMail($this->adminEmail, $subject, $template);
+        } catch (Exception $e) {
+            error_log("Error sending email: ".$e->getMessage().PHP_EOL, 3, $this->logFile);
+        }
+
+        throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");
     }
 }
 ?>
