@@ -1,5 +1,5 @@
 --- 
 deployment:
   tasks:
-    -export DEPLOYPATH=/home/rmissgames/noelperez.rimisszoic.live/videogames
+    - export DEPLOYPATH=/home/rmissgames/noelperez.rimisszoic.live/videogames
     - /bin/cp -R * $DEPLOYPATH
