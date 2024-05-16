@@ -8,11 +8,11 @@ class User {
     // Propiedades de la clase User
     private string $fullName;
     private string $nickName;
-    private date $dateOfBirth;
+    private ?date $dateOfBirth;
     private string $email;
     private string $password;
     private int $role;
-    private date $lastAccess;
+    private ?DateTime $lastAccess;
 
     /**
      * Constructor de la clase User.
@@ -20,11 +20,11 @@ class User {
     public function __construct() {
         $this->fullName = "";
         $this->nickName = "";
-        $this->dateOfBirth = "";
+        $this->dateOfBirth = null;
         $this->email = "";
         $this->password = "";
         $this->role = 0;
-        $this->lastAccess = "";
+        $this->lastAccess = null;
     }
 
     /**
@@ -32,7 +32,7 @@ class User {
      * @param string $email Correo electrónico del usuario.
      * @param string $password Contraseña del usuario.
      */
-    public function logUser(string $nickName, string $password): void {
+    public function logUser(string $nickName, string $password): bool {
         try{
             $password = md5($password);
             $conn = new Connection();
@@ -52,11 +52,14 @@ class User {
                 $this->setEmail($row['email']);
                 $this->setPassword($password);
                 $this->setLastAccess($_SESSION['user_id']);
+                return true;
                 header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha logueado correctamente'));
             } else {
+                return false;
                 header(encode_url('Location: '.BASE_URL.'?result=error&msg=Usuario o contraseña incorrectos'));
             }
         } catch (Exception $e) {
+            return false;
             header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
         }
     }
@@ -69,30 +72,33 @@ class User {
         session_destroy();
         // Recargar la vista
         header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha deslogueado correctamente'));
+        exit();
     }
 
     /**
      * Método para crear un usuario.
      * @param string $name Nombre completo del usuario.
      * @param string $nick Nombre de usuario (nick).
-     * @param date $dob Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
+     * @param string $dob Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
      * @param string $email Correo electrónico del usuario.
      * @param string $password Contraseña del usuario.
      * @param string $confirmPassword Confirmación de la contraseña del usuario.
+     * @return bool Resultado de la operación.
      */
-    public function createUser(string $name, string $nick, date $dob, string $email, string $password, string $confirmPassword): void {
+    public function createUser(string $name, string $nick, string $dob, string $email, string $password, string $confirmPassword): bool {
         try{
             $conn = new Connection();
             $conn->connect();
             $query = "SELECT * FROM user WHERE email = '$email' OR nick = '$nick'";
             $result = $conn->query($query);
             if($result->num_rows > 0) {
-                $_SESSION['result'] = false;
+                return false;
             } else {
-                if($password === $confirmPassword){
-                    $this->setPassword(md5($password));
+                if($password !== $confirmPassword){
+                    header(urlencode('Location: '.BASE_URL.'?result=error&msg=Las contraseñas no coinciden'));
+                    return false;
                 } else {
-                    header(encode_url('Location: '.BASE_URL.'?result=error&msg=Las contraseñas no coinciden'));
+                    $this->setPassword(md5($password));
                 }
 
                 // Verificar si el nombre comoleto contiene un espacio en blanco
@@ -118,15 +124,19 @@ class User {
                 $resultRol=$conn->query($queryRol);
                 $rowRol=$resultRol->fetch_assoc();
                 $this->setLocalRole($rowRol['id']);
-                $query = "INSERT INTO user (name, nick, dob, email, password, rol) VALUES ('$this->getFullName()', '$this->getNickName()', '$this->getNickName()', '$email->getEmail()', '$this->getPassword()','$this->getLocalRole()')";
+                $query = "INSERT INTO usuarios (nombre_completo, nombre_usuario, fecha_nacimiento, email, password, rol) VALUES ('$this->getFullName()', '$this->getNickName()', '$this->getNickName()', '$email->getEmail()', '$this->getPassword()','$this->getLocalRole()')";
                 $conn->query($query);
                 $_SESSION['result'] = true;
                 $_SESSION['user_id'] = $conn->getLastId();
                 $_SESSION['user_role'] = $this->getLocalRole();
                 $_SESSION['user_nick'] = $this->getNickName();
+                $conn->close();
+                return true;
+                header(urlencode('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha registrado correctamente'));
             }
         } catch (Exception $e) {
-            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+            return false;
+            header(urlencode('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
         }
     }
 
@@ -134,31 +144,37 @@ class User {
      * Método para actualizar un usuario.
      * @param string $name Nombre completo del usuario.
      * @param string $nick Nombre de usuario (nick).
-     * @param date $dob Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
+     * @param string $dob Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
      * @param string $email Correo electrónico del usuario.
      * @param string $password Contraseña del usuario.
      * @param string $confirmPassword Confirmación de la contraseña del usuario.
      */
-    public function updateUser(string $name, string $nick, date $dob, string $email, string $password, string $confirmPassword): void {
+    public function updateUser(string $name, string $nick, string $dob, string $email, string $password, string $confirmPassword): bool {
         $this->setFullName($name);
         $this->setNickName($nick);
         $this->setDateOfBirth($dob);
         $this->setEmail($email);
 
         // Comprobar si las contraseñas coinciden
-        if($password === $confirmPassword){
-            $this->setPassword(md5($password));
-        } else {
+        if($password !== $confirmPassword){
+            return false;
             header(encode_url('Location: '.BASE_URL.'?result=error&msg=Las contraseñas no coinciden'));
+        } else {
+            $this->setPassword(md5($password));
+            
         }
-        $this->setLastAccess($_SESSION['id']);
+        $this->setLastAccess($_SESSION['user_id']);
 
         try{
             $conn = new Connection();
             $conn->connect();
-            $query = "UPDATE user SET name = '$this->getFullName', nick = '$this->getNickName', dob = '$this->getDateOfBirth', email = '$this->getEmail', password = '$this->getPassword' WHERE id = ".$_SESSION['id'];
+            $query = "UPDATE usuarios SET nombre_completo = '$this->getFullName', nombre_usuario = '$this->getNickName', fecha_nacimiento= '$this->getDateOfBirth', email = '$this->getEmail', password = '$this->getPassword' WHERE id = ".$_SESSION['user_id'];
             $conn->query($query);
+            $conn->close();
+            return true;
+            header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha actualizado correctamente'));
         } catch (Exception $e) {
+            return false;
             header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
         }
     }
@@ -166,25 +182,59 @@ class User {
     /**
      * Método para eliminar un usuario.
      */
-    public function deleteUser(): void {
+    public function deleteUser(): bool {
         $conn = new Connection();
-        $conn->connect();
-        $query = "DELETE FROM user WHERE id = ".$_SESSION['id'];
-        $conn->query($query);
-        $conn->close();
+        try{
+            $conn->connect();
+            $query = "DELETE FROM usuarios WHERE id = ".$_SESSION['user_id'];
+            if($conn->query($query)){
+                $this->unlogUser();
+                return true;
+                header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha eliminado correctamente'));
+            } else {
+                return false;
+                header(encode_url('Location: '.BASE_URL.'?result=error&msg=No se ha podido eliminar el usuario'));
+            }
+        } catch (Exception $e) {
+            return false;
+            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+        } finally{
+            if($conn!==null){
+                $conn->close();
+            }
+        }
     }
 
     /**
      * Método para obtener un usuario.
      * @return array Usuario
      */
-    public function getUser(): array {
+    public function getUser(): bool  {
         $conn = new Connection();
-        $conn->connect();
-        $query = "SELECT * FROM user WHERE id = ".$_SESSION['id'];
-        $result = $conn->query($query);
-        $conn->close();
-        return $result;
+        try {
+            $conn->connect();
+            $query = "SELECT * FROM usuarios WHERE id = ".$_SESSION['user_id'];
+            $result = $conn->query($query);
+            if($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $this->setFullName($row['nombre_completo']);
+                $this->setNickName($row['nombre_usuario']);
+                $this->setDateOfBirth($row['fecha_nacimiento']);
+                $this->setEmail($row['email']);
+                $this->setPassword($row['password']);
+                $this->setLocalRole($row['rol']);
+                $this->setLocalLastAccess($row['ultimo_acceso']);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
+        }
     }
 
     /**
@@ -206,11 +256,26 @@ class User {
      */
     public function getRoles(): array {
         $conn = new Connection();
-        $conn->connect();
-        $query = "SELECT * FROM role";
-        $result = $conn->query($query);
-        $conn->close();
-        return $result;
+        try {
+            $conn->connect();
+            $query = "SELECT * FROM roles";
+            $result = $conn->query($query);
+            if($result->num_rows > 0) {
+                $roles = array();
+                while($row = $result->fetch_assoc()) {
+                    $roles[] = $row;
+                }
+            } else {
+                return array();
+            }
+        } catch (Exception $e) {
+            return array();
+            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
+        }
     }
 
     /**
