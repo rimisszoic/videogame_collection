@@ -34,9 +34,10 @@ $(document).ready(function() {
             element: 'body',
             showProgressbar: false,
             placement: {
-                from: 'top',
+                from: 'bottom',
                 align: 'right'
             },
+            timer: 5000,
             onShow: null,
             onShown: null,
             onClose: null,
@@ -59,9 +60,10 @@ $(document).ready(function() {
             element: 'body',
             showProgressbar: false,
             placement: {
-                from: 'top',
+                from: 'bottom',
                 align: 'right'
             },
+            timer: 7500,
             onShow: null,
             onShown: null,
             onClose: null,
