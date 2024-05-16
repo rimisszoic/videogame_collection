@@ -10,8 +10,7 @@ require_once('config/const.php');
     <title>Videojuegos</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="<?php echo BOOTSTRAP; ?>css/bootstrap.min.css">
-    <!-- Bootstrap Notify JavaScript -->
-    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom CSS -->
@@ -110,9 +109,17 @@ require_once('config/const.php');
                         </div>
                         <div class="mb-3">
                             <label for="registerDob" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="registerDob" name="dob" required aria-label="Fecha de nacimiento">
+                            <input type="date" class="form-control" id="registerDob" name="dob" required aria-label="Fecha de nacimiento" max="<?php echo date('Y-m-d', strtotime('-14 years')); ?>">
                             <div id="registerDobHelp" class="form-text"></div>
                         </div>
+                        <?php
+                        $minAge = 14;
+                        $minDate = date('Y-m-d', strtotime("-$minAge years"));
+                        $selectedDate = $_POST['dob'] ?? '';
+                        if ($selectedDate > $minDate) {
+                            echo '<div class="alert alert-danger" role="alert">Debes tener al menos 14 años para registrarte.</div>';
+                        }
+                        ?>
                         <div class="mb-3">
                             <label for="registerEmail" class="form-label">Correo electrónico</label>
                             <input type="email" class="form-control" id="registerEmail" name="email" required aria-label="Correo electrónico">
@@ -167,6 +174,8 @@ require_once('config/const.php');
     <!-- Bootstrap Bundle with Popper -->
     <script src="<?php echo BOOTSTRAP; ?>js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Notify JavaScript -->
+    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
     <script src="<?php echo JS; ?>notifications.js"></script>
     <script src="<?php echo JS; ?>passwords.js"></script>
 </body>
