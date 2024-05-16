@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido a nuestra aplicación</title>
+    <style>
+        /* Copia el contenido de bootstrap.min.css aquí */
+        /* Puedes obtener bootstrap.min.css de https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .welcome-header {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .welcome-body {
+            background-color: #fefefe;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-header">
+            <h1>Bienvenido, {{ username }}</h1>
+        </div>
+        <div class="welcome-body">
+            <p>Estamos encantados de que te hayas unido a nosotros.</p>
+        </div>
+    </div>
+</body>
+</html>
