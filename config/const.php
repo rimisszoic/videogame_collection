@@ -11,4 +11,6 @@ define('IMG','resources/images/');
 define('BOOTSTRAP','resources/bootstrap/'); // Modificada la constante BOOTSTRAP
 define('CONFIG','config/');
 define('ROOT', $_SERVER['DOCUMENT_ROOT'] . '/videogame_collection/'); // Corregida la ruta del directorio raíz
+define('LOGS', ROOT . 'logs/'); // Corregida la ruta del directorio de logs
+define('RESOURCES', ROOT . 'resources/'); // Corregida la ruta del directorio de recursos
 ?>
