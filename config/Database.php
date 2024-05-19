@@ -1,6 +1,5 @@
 <?php
 require_once(MODEL.'Mailer.php');
-use MODEL\Mailer; // Add the missing import statement
 
 // Clase base para manejar la conexión y las operaciones con la base de datos
 class Database
@@ -72,7 +71,7 @@ class Database
 
         // Enviar un correo electrónico al administrador
         try{
-            $subjet="Error en la aplicación";
+            $subject="Error en la aplicación";
             $template=$this->mailer->loadTemplate(RESOURCES.'templates/error_email.html', ['errorMessage'=>$message]);
             $this->mailer->sendMail($this->adminEmail, $subject, $template);
         } catch (Exception $e) {

@@ -1,13 +1,12 @@
 <?php
-// Clase para enviar correos electrónicos
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require_once(CONFIG . 'const.php');
 require_once(RESOURCES.'mailer/src/PHPMailer.php');
 require_once(RESOURCES.'mailer/src/Exception.php');
 require_once(RESOURCES.'mailer/src/SMTP.php');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Clase para enviar correos electrónicos
 class Mailer
 {
     private $mail;
