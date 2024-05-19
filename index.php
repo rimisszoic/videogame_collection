@@ -17,31 +17,42 @@ require_once('config/const.php');
     <link rel="stylesheet" href="<?php echo CSS; ?>passwords.css">
 </head>
 <body>
-
+    <!-- Precagador -->
+    <div class="spinner"></div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Videojuegos</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Colecciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contacto</a>
+                    </li>
+                </ul>
                 <ul class="navbar-nav">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?php echo $_SESSION['nick']; ?>
+                                <?php echo ucfirst($_SESSION['user_nick']); ?>
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#"><i class="fa fa-user" aria-hidden="true"></i>Perfil</a></li>
-                                <li><a class="dropdown-item" href="#">Colección</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>Cerrar Sesión</a></li>
+                                <li><a class="dropdown-item" href="router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
-                        <li class="nav-item">
+                        <li class="nav-item ms-auto">
                             <button type="button" class="btn btn-success rounded" data-bs-toggle="modal" data-bs-target="#loginModal">Entrar</button>
                         </li>
                     <?php endif; ?>
@@ -79,8 +90,7 @@ require_once('config/const.php');
                         <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
                     </form>
                     <div class="text-center mt-3">
-                        <p>¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate aquí</a>
-                        </p>
+                        <p>¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate aquí</a></p>
                     </div>
                 </div>
             </div>
