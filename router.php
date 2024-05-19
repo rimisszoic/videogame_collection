@@ -2,11 +2,11 @@
 // router.php
 
 // Incluye los archivos necesarios
-require_once 'config/const.php';
-require_once 'controller/UserController.php';
+include_once('config/const.php');
+include_once('controller/UserController.php');
 
 // Verifica si se ha especificado una acción
-if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET') {
     // Maneja la acción según el valor del parámetro 'action'
     switch ($_REQUEST['action']) {
         case 'login':
@@ -14,22 +14,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET' 
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $userController = new UserController();
                 $userController->login();
-                break;
             }
+            break;
         case 'register':
             // Instancia el controlador de usuario y ejecuta el registro
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $userController = new UserController();
                 $userController->register();
-                break;
             }
+            break;
         case 'logout':
             // Instancia el controlador de usuario y ejecuta el cierre de sesión
             if($_SERVER['REQUEST_METHOD'] == 'GET'){
                 $userController = new UserController();
                 $userController->logout();
-                break;
             }
+            break;
     }
 }
 ?>
