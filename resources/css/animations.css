@@ -1,0 +1,72 @@
+@keyframes fadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@-webkit-keyframes fadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@-moz-keyframes fadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@-o-keyframes fadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.dropdown-menu{
+    animation: fadeIn 0.5s ease-in-out;
+    -webkit-animation: fadeIn 0.5s ease-in-out;
+    -moz-animation: fadeIn 0.5s ease-in-out;
+    -o-animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Spinner */
+.spinner{
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    border-radius: 100%;
+    animation: spin 1s linear infinite;
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    -o-animation: spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes spin{
+    to{
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes spin{
+    to{
+        -moz-transform: rotate(360deg);
+    }
+}
+@-o-keyframes spin{
+    to{
+        -o-transform: rotate(360deg);
+    }
+}
