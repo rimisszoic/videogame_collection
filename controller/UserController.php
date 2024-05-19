@@ -1,7 +1,10 @@
 <?php
+session_start();
 require_once(MODEL.'User.php');
-require_once(CONFIG.'const.php');
 
+/**
+ * Clase controladora de usuarios
+ */
 class UserController {
     public function login()
     {
@@ -11,11 +14,11 @@ class UserController {
             $result = $user->logUser($_POST['nick'], $_POST['password']);
             if ($result) {
                 // Redirigir al dashboard si el inicio de sesión es exitoso
-                header('Location: ' . BASE_URL . '?result=ok&msg=El usuario se ha logueado correctamente');
+                header('Location: ' . BASE_URL . '?result=ok&msg='.urlencode('El usuario se ha logueado correctamente'));
                 exit();
             } else {
                 // Mostrar mensaje de error en la vista
-                header('Location: ' . BASE_URL . '?result=error&msg=Usuario o contraseña incorrectos');
+                header('Location: ' . BASE_URL . '?result=error&msg='.urlencode('Usuario o contraseña incorrectos'));
                 exit();
             }
         } else {
@@ -33,11 +36,11 @@ class UserController {
             $result = $user->createUser($_POST['name'], $_POST['nick'], $_POST['dob'], $_POST['email'], $_POST['registerPassword'], $_POST['confirmPassword']);
             if ($result) {
                 // Redirigir al inicio de sesión si el registro es exitoso
-                header('Location: ' . BASE_URL . '?result=ok&msg=El usuario se ha registrado correctamente');
+                header('Location: ' . BASE_URL . '?result=ok&msg='.urlencode('El usuario se ha registrado correctamente'));
                 exit();
             } else {
                 // Mostrar mensaje de error en la vista
-                header('Location: ' . BASE_URL . '?result=error&msg=Error al registrar el usuario');
+                header('Location: ' . BASE_URL . '?result=error&msg='.urlencode('Error al registrar el usuario'));
                 exit();
             }
         } else {
@@ -50,7 +53,9 @@ class UserController {
     public function logout()
     {
         $user= new User();
-        $user->logout();
+        if($user->getUser()){
+            $user->unlogUser();
+        }
     }
 
     public function updateProfile()

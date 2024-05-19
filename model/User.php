@@ -1,5 +1,6 @@
 <?php
-include_once(MODEL.'Connection.php');
+session_start();
+require_once(MODEL.'Connection.php');
 
 /**
  * Clase para representar un usuario.
@@ -8,7 +9,7 @@ class User {
     // Propiedades de la clase User
     private string $fullName;
     private string $nickName;
-    private ?date $dateOfBirth;
+    private ?string $dateOfBirth;
     private string $email;
     private string $password;
     private int $role;
@@ -39,28 +40,30 @@ class User {
             $conn->connect();
             $query = "SELECT * FROM usuarios WHERE nombre_usuario = '$nickName' AND password = '$password'";
             $result = $conn->query($query);
-            $conn=null;
-            if($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
+            $conn->close();
+            if($result->rowCount() > 0) {
+                $row = $result->fetch(PDO::FETCH_ASSOC);
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['user_role'] = $row['rol'];
                 $_SESSION['user_nick'] = $nickName;
                 $_SESSION['result'] = true;
-                $this->setFullName($row['nombre']);
+                $this->setFullName($row['nombre_completo']);
                 $this->setNickName($nickName);
                 $this->setDateOfBirth($row['fecha_nacimiento']);
                 $this->setEmail($row['email']);
                 $this->setPassword($password);
                 $this->setLastAccess($_SESSION['user_id']);
                 return true;
-                header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha logueado correctamente'));
             } else {
                 return false;
-                header(encode_url('Location: '.BASE_URL.'?result=error&msg=Usuario o contraseña incorrectos'));
             }
         } catch (Exception $e) {
+            header(urlencode('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
             return false;
-            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
         }
     }
 
@@ -71,7 +74,7 @@ class User {
         $this->setLastAccess($_SESSION['user_id']);
         session_destroy();
         // Recargar la vista
-        header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha deslogueado correctamente'));
+        header(urlencode('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha deslogueado correctamente'));
         exit();
     }
 
@@ -89,9 +92,9 @@ class User {
         try{
             $conn = new Connection();
             $conn->connect();
-            $query = "SELECT * FROM user WHERE email = '$email' OR nick = '$nick'";
+            $query = "SELECT * FROM usuarios WHERE email = '$email' OR nick = '$nick'";
             $result = $conn->query($query);
-            if($result->num_rows > 0) {
+            if($result->rowCount() > 0) {
                 return false;
             } else {
                 if($password !== $confirmPassword){
@@ -127,16 +130,20 @@ class User {
                 $query = "INSERT INTO usuarios (nombre_completo, nombre_usuario, fecha_nacimiento, email, password, rol) VALUES ('$this->getFullName()', '$this->getNickName()', '$this->getNickName()', '$email->getEmail()', '$this->getPassword()','$this->getLocalRole()')";
                 $conn->query($query);
                 $_SESSION['result'] = true;
-                $_SESSION['user_id'] = $conn->getLastId();
+                $_SESSION['user_id'] = $conn->lastInsertId();
                 $_SESSION['user_role'] = $this->getLocalRole();
                 $_SESSION['user_nick'] = $this->getNickName();
                 $conn->close();
-                return true;
                 header(urlencode('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha registrado correctamente'));
+                return true;
             }
         } catch (Exception $e) {
-            return false;
             header(urlencode('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+            return false;
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
         }
     }
 
@@ -157,11 +164,10 @@ class User {
 
         // Comprobar si las contraseñas coinciden
         if($password !== $confirmPassword){
+            header(urlencode('Location: '.BASE_URL.'?result=error&msg=Las contraseñas no coinciden'));
             return false;
-            header(encode_url('Location: '.BASE_URL.'?result=error&msg=Las contraseñas no coinciden'));
         } else {
             $this->setPassword(md5($password));
-            
         }
         $this->setLastAccess($_SESSION['user_id']);
 
@@ -171,11 +177,15 @@ class User {
             $query = "UPDATE usuarios SET nombre_completo = '$this->getFullName', nombre_usuario = '$this->getNickName', fecha_nacimiento= '$this->getDateOfBirth', email = '$this->getEmail', password = '$this->getPassword' WHERE id = ".$_SESSION['user_id'];
             $conn->query($query);
             $conn->close();
+            header(urlencode('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha actualizado correctamente'));
             return true;
-            header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha actualizado correctamente'));
         } catch (Exception $e) {
+            header(urlencode('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
             return false;
-            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
         }
     }
 
@@ -189,15 +199,15 @@ class User {
             $query = "DELETE FROM usuarios WHERE id = ".$_SESSION['user_id'];
             if($conn->query($query)){
                 $this->unlogUser();
+                header(urlencode('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha eliminado correctamente'));
                 return true;
-                header(encode_url('Location: '.BASE_URL.'?result=ok&msg=El usuario se ha eliminado correctamente'));
             } else {
+                header(urlencode('Location: '.BASE_URL.'?result=error&msg=No se ha podido eliminar el usuario'));
                 return false;
-                header(encode_url('Location: '.BASE_URL.'?result=error&msg=No se ha podido eliminar el usuario'));
             }
         } catch (Exception $e) {
+            header(urlencode('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
             return false;
-            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
         } finally{
             if($conn!==null){
                 $conn->close();
@@ -215,8 +225,8 @@ class User {
             $conn->connect();
             $query = "SELECT * FROM usuarios WHERE id = ".$_SESSION['user_id'];
             $result = $conn->query($query);
-            if($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
+            if($result->rowCount() > 0) {
+                $row = $result->fetch(PDO::FETCH_ASSOC);
                 $this->setFullName($row['nombre_completo']);
                 $this->setNickName($row['nombre_usuario']);
                 $this->setDateOfBirth($row['fecha_nacimiento']);
@@ -244,7 +254,7 @@ class User {
     public function getUsers(): array {
         $conn = new Connection();
         $conn->connect();
-        $query = "SELECT * FROM user";
+        $query = "SELECT * FROM usuarios";
         $result = $conn->query($query);
         $conn->close();
         return $result;
@@ -262,7 +272,7 @@ class User {
             $result = $conn->query($query);
             if($result->num_rows > 0) {
                 $roles = array();
-                while($row = $result->fetch_assoc()) {
+                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     $roles[] = $row;
                 }
             } else {
@@ -270,7 +280,7 @@ class User {
             }
         } catch (Exception $e) {
             return array();
-            header(encode_url('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+            header(urlencode('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
         } finally {
             if($conn!==null){
                 $conn->close();
@@ -286,7 +296,7 @@ class User {
     public function setRole(int $userId, int $roleId): void {
         $conn = new Connection();
         $conn->connect();
-        $query = "UPDATE user SET role_id = $roleId WHERE id = $userId";
+        $query = "UPDATE usuarios SET rol = $roleId WHERE id = $userId";
         $conn->query($query);
         $conn->close();
         $this->setLocalRole($roleId);
@@ -300,12 +310,12 @@ class User {
     public function getRole(int $userId): int {
         $conn = new Connection();
         $conn->connect();
-        $query = "SELECT role_id FROM user WHERE id = $userId";
+        $query = "SELECT role FROM usuarios WHERE id = $userId";
         $result = $conn->query($query);
         $role = 0; // Valor predeterminado
-        if($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $role = $row['role_id'];
+        if($result->rowCount() > 0) {
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            $role = $row['rol'];
         }
         $conn->close();
         return $role;
@@ -319,12 +329,12 @@ class User {
     public function getLastAccess(int $userId): string {
         $conn = new Connection();
         $conn->connect();
-        $query = "SELECT last_access FROM user WHERE id = $userId";
+        $query = "SELECT ultimo_acceso FROM usuarios WHERE id = $userId";
         $result = $conn->query($query);
         $lastAccess = ""; // Valor predeterminado si no se encuentra ningún acceso
-        if($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $lastAccess = $row['last_access'];
+        if($result->rowCount() > 0) {
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            $lastAccess = $row['ultimo_acceso'];
         }
         $conn->close();
         return $lastAccess;
@@ -337,10 +347,10 @@ class User {
     public function setLastAccess(int $userId): void {
         $conn = new Connection();
         $conn->connect();
-        $query = "UPDATE user SET last_access = NOW() WHERE id = $userId";
+        $query = "UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = $userId";
         $conn->query($query);
         $conn->close();
-        $this->setLocalLastAccess(date('Y-m-d H:i:s'));
+        $this->setLocalLastAccess(new DateTime());
     }
 
     // Getters y Setters
@@ -451,10 +461,12 @@ class User {
 
     /**
      * Método para establecer el último acceso del usuario.
-     * @param string $lastAccess Fecha y hora del último acceso en formato 'YYYY-MM-DD HH:MM:SS'.
+     * @param DateTime|null $lastAccess Fecha y hora del último acceso en formato 'YYYY-MM-DD HH:MM:SS'.
      */
-    public function setLocalLastAccess(date $lastAccess): void {
-        $this->lastAccess = date('Y-m-d H:i:s', strtotime($lastAccess));
+    public function setLocalLastAccess(?DateTime $lastAccess): void {
+        if($lastAccess !== null){
+            $this->lastAccess = $lastAccess;
+        }
     }
 }
 ?>
