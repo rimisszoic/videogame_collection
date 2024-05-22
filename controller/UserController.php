@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once(MODEL.'User.php');
+require_once(MODELS.'User.php');
 
 /**
  * Clase controladora de usuarios
@@ -53,7 +53,7 @@ class UserController {
     public function logout()
     {
         $user= new User();
-        if($user->getUser()){
+        if($user->getUser() === true){
             $user->unlogUser();
         }
     }

@@ -70,7 +70,7 @@ require_once('config/const.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="router.php" method="post">
+                    <form action="<?php echo ROUTER; ?>" method="post">
                         <div class="mb-3">
                             <label for="loginNick" class="form-label">Nick</label>
                             <input type="text" class="form-control" id="loginNick" name="nick" required aria-label="Nombre de usuario">
@@ -106,7 +106,7 @@ require_once('config/const.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="router.php" method="post">
+                    <form action="<?php echo ROUTER; ?>" method="post">
                         <div class="mb-3">
                             <label for="registerName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="registerName" name="name" required aria-label="Nombre">

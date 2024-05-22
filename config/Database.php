@@ -1,5 +1,5 @@
 <?php
-require_once(MODEL.'Mailer.php');
+require_once(MODELS.'Mailer.php');
 
 // Clase base para manejar la conexión y las operaciones con la base de datos
 class Database
@@ -59,6 +59,27 @@ class Database
         }
     }
 
+    /**
+     * Método para ejecutar una consulta preparada
+     * @param string $query Consulta SQL a ejecutar
+     * @param array $params Parámetros de la consulta
+     * @return PDOStatement Resultado de la consulta
+     * @throws Exception Si la consulta falla
+     */
+    public function prepare($query, $params){
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            $this->handleError("Prepare failed: ".$e->getMessage());
+            throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");
+        }
+    }
+
+    public function returnConnection(){
+        return $this->conn;
+    }
     /**
      * Método para manejar los errores en un archivo y enviar correos electrónicos al administrador
      * @param string $message Mensaje de error

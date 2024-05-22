@@ -3,7 +3,7 @@
 
 // Incluye los archivos necesarios
 include_once('config/const.php');
-include_once('controller/UserController.php');
+include_once(CONTROLLERS . 'UserController.php');
 
 // Verifica si se ha especificado una acción
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET') {

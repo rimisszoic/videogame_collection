@@ -1,3 +1,8 @@
+<?php
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,6 +14,8 @@
 </head>
 <body>
 
+    <!-- Precagador -->
+    <div class="spinner"></div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -16,31 +23,38 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <span class="navbar-text">Bienvenido, <?php echo $userName; ?></span>
+                        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL . '?route=profile'; ?>">Perfil</a>
+                        <a class="nav-link" href="#">Colecciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL . '?route=collection'; ?>">Colección</a>
+                        <a class="nav-link" href="#">Contacto</a>
                     </li>
-                    <li class="nav-item">
-                        <form action="<?php echo BASE_URL . '?route=logout'; ?>" method="post">
-                            <button type="submit" class="btn btn-link nav-link">Cerrar Sesión</button>
-                        </form>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php echo ucfirst($_SESSION['user_nick']); ?>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                            <li><a class="dropdown-item" href="#" aria-current="page"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-
     <div class="container mt-5">
         <h1>Perfil de Usuario</h1>
         <!-- Formulario de perfil de usuario -->
-        <form id="profileForm" action="<?php echo BASE_URL . '?route=updateProfile'; ?>" method="post">
+        <form id="profileForm" action="<?php echo  ?>" method="post">
             <!-- Campos del formulario -->
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>

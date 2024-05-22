@@ -1,3 +1,8 @@
 Database Error: Query failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'videogame_collection.user' doesn't exist
 Database Error: Query failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'videogame_collection.user' doesn't exist
 Database Error: Query failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'videogame_collection.user' doesn't exist
+Database Error: Query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nick' in 'where clause'
+Database Error: Query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nick' in 'where clause'
+Database Error: Query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nick' in 'where clause'
+Database Error: Query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nick' in 'where clause'
+Database Error: Query failed: SQLSTATE[21S01]: Insert value list does not match column list: 1136 Column count doesn't match value count at row 1
