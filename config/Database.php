@@ -37,6 +37,7 @@ class Database
             $dsn = "mysql:host=$this->servername;dbname=$this->dbname;charset=$this->charset";
             $this->conn = new PDO($dsn, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->exec("SET time_zone = '+01:00'");
         } catch (PDOException $e) {
             $this->handleError("Connection failed: ".$e->getMessage());
             throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");
@@ -62,24 +63,38 @@ class Database
     /**
      * Método para ejecutar una consulta preparada
      * @param string $query Consulta SQL a ejecutar
-     * @param array $params Parámetros de la consulta
      * @return PDOStatement Resultado de la consulta
      * @throws Exception Si la consulta falla
      */
-    public function prepare($query, $params){
-        try {
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute($params);
-            return $stmt;
-        } catch (PDOException $e) {
-            $this->handleError("Prepare failed: ".$e->getMessage());
-            throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");
-        }
+    public function prepare($query){
+        return $this->conn->prepare($query);
     }
 
+    /**
+     * Método para obtener la última fila insertada en la base de datos
+     * @return string ID de la última fila insertada
+     * @throws Exception Si la consulta falla
+     */
     public function returnConnection(){
         return $this->conn;
     }
+
+    /**
+     * Método para obtener la última fila insertada en la base de datos
+     * @return string ID de la última fila insertada
+     * @throws Exception Si la consulta falla
+     */
+    public function lastInsertId(){
+        try {
+            return $this->conn->lastInsertId();
+        } catch (PDOException $e) {
+            $this->handleError("Last insert ID failed: ".$e->getMessage());
+            throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");
+        } finally {
+            $this->conn = null;
+        }
+    }
+
     /**
      * Método para manejar los errores en un archivo y enviar correos electrónicos al administrador
      * @param string $message Mensaje de error
