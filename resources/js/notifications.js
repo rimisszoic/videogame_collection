@@ -26,8 +26,6 @@ $(document).ready(function() {
             title: '<strong>Éxito</strong>',
             message: "<br>"+msg,
             icon: 'glyphicon glyphicon-ok',
-            url: 'https://github.com/mouse0270/bootstrap-notify',
-            target: '_blank'
         }, {
             type: 'success',
             position: null,
@@ -37,7 +35,7 @@ $(document).ready(function() {
                 from: 'bottom',
                 align: 'right'
             },
-            timer: 5000,
+            timer: 7500,
             onShow: null,
             onShown: null,
             onClose: null,
@@ -52,8 +50,6 @@ $(document).ready(function() {
             title: '<strong>Error</strong>',
             message: "<br>"+msg,
             icon: 'glyphicon glyphicon-remove',
-            url: 'https://github.com/mouse0270/bootstrap-notify',
-            target: '_blank'
         }, {
             type: 'danger',
             position: null,
@@ -63,7 +59,7 @@ $(document).ready(function() {
                 from: 'bottom',
                 align: 'right'
             },
-            timer: 7500,
+            timer: 15000,
             onShow: null,
             onShown: null,
             onClose: null,
