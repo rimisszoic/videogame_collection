@@ -57,26 +57,6 @@ class UserController {
             $user->unlogUser();
         }
     }
-
-    public function updateProfile()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Si se envió la solicitud de cancelación de la edición
-            if(isset($_POST['cancelEdit'])) {
-                // Redirigir a la página de perfil de usuario
-                header('Location: ' . BASE_URL . '?route=profile');
-            }
-            // Si se enviaron datos para actualizar el perfil
-            else {
-                // Validar y procesar datos de actualización del perfil
-                $user = new User();
-                $user->updateUser($_POST['name'], $_POST['nick'], $_POST['dob'], $_POST['email'], $_POST['password'], $_POST['confirmPassword']);
-                
-                // Redirigir a la página de perfil de usuario
-                header('Location: ' . BASE_URL . '?route=profile');
-            }
-        }
-    }
     
     public function deleteAccount()
     {
@@ -86,7 +66,7 @@ class UserController {
             $user->deleteUser($_POST['id']);
             
             // Redirigir a la página de inicio
-            header('Location: ' . BASE_URL);
+            header('Location: ' . BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha eliminado correctamente'));
         }
     }
 }
