@@ -2,6 +2,10 @@
 if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
+
+include_once(MODELS.'/User.php');
+$user=new User();
+$user=$user->getUser();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -10,12 +14,14 @@ if(session_status() == PHP_SESSION_NONE){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="<?php echo BOOTSTRAP; ?>bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo BOOTSTRAP; ?>/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="<?php echo CSS; ?>animations.css">
+    <link rel="stylesheet" href="<?php echo CSS; ?>user-profile.css">
 </head>
 <body>
-
-    <!-- Precagador -->
-    <div class="spinner"></div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -26,7 +32,7 @@ if(session_status() == PHP_SESSION_NONE){
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                        <a class="nav-link active" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Colecciones</a>
@@ -41,81 +47,157 @@ if(session_status() == PHP_SESSION_NONE){
                             <?php echo ucfirst($_SESSION['user_nick']); ?>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                            <li><a class="dropdown-item" href="#" aria-current="page"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                            <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=user-profile" aria-current="page"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                            <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=colection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                            <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+
     <div class="container mt-5">
         <h1>Perfil de Usuario</h1>
         <!-- Formulario de perfil de usuario -->
-        <form id="profileForm" action="<?php echo  ?>" method="post">
+        <form id="profileForm" action="<?php echo ROUTER ?>?action=updateProfile" method="post">
             <!-- Campos del formulario -->
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="name" name="name" value="<?php echo $userFullName; ?>" disabled>
+                <input type="text" class="form-control" id="name" name="name" value="<?php echo $this->user->getFullName(); ?>" disabled aria-disabled="true">
             </div>
             <div class="mb-3">
                 <label for="nick" class="form-label">Apodo</label>
-                <input type="text" class="form-control" id="nick" name="nick" value="<?php echo $userNick; ?>" disabled>
+                <input type="text" class="form-control" id="nick" name="nick" value="<?php print $this->user->getNickName(); ?>" disabled aria-disabled="true">
             </div>
             <div class="mb-3">
                 <label for="dob" class="form-label">Fecha de Nacimiento</label>
-                <input type="date" class="form-control" id="dob" name="dob" value="<?php echo $userDOB; ?>" disabled>
+                <input type="date" class="form-control" id="dob" name="dob" value="<?php print $this->user->getDateOfBirth(); ?>" disabled aria-disabled="true">
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo $userEmail; ?>" disabled>
+                <input type="email" class="form-control" id="email" name="email" value="<?php print $this->user->getEmail(); ?>" disabled aria-disabled="true">
             </div>
-            <!-- Botón para editar el perfil -->
-            <button type="button" class="btn btn-primary" id="editProfileBtn" onclick="editProfile()">Editar Perfil</button>
-            <!-- Botón para guardar los cambios -->
-            <button type="submit" id="saveChangesBtn" class="btn btn-success" style="display: none;">Guardar Cambios</button>
-            <!-- Botón para cancelar la edición -->
-            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;" onclick="cancelEdit()">Cancelar</button>
-        </form>
 
-        <!-- Formulario para darse de baja -->
-        <form action="<?php echo BASE_URL . '?route=deleteAccount'; ?>" method="post">
-            <button type="submit" class="btn btn-danger mt-3">Darse de Baja</button>
+            <h2 class="mt-5">Cambiar Contraseña</h2>
+            <div class="mb-3">
+                <label for="current_password" class="form-label">Contraseña Actual</label>
+                <input type="password" class="form-control" id="current_password" name="current_password" disabled aria-disabled="true">
+            </div>
+            <div class="mb-3">
+                <label for="new_password" class="form-label">Nueva Contraseña</label>
+                <input type="password" class="form-control" id="new_password" name="new_password" disabled aria-disabled="true">
+            </div>
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Confirmar Nueva Contraseña</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" disabled aria-disabled="true">
+            </div>
+
+            <!-- Botones para editar y guardar cambios -->
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary" id="editProfileBtn" onclick="editProfile()">Editar Perfil</button>
+                <div>
+                    <button type="submit" id="saveChangesBtn" class="btn btn-success">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" style="display: none;" id="cancelEditBtn" onclick="cancelEdit()">Cancelar</button>
+                </div>
+            </div>
+            <input type="hidden" name="action" value="updateProfile">
         </form>
     </div>
 
+    <div class="container mt-5">
+        <h2>Eliminar Cuenta</h2>
+        <p>Si decides eliminar tu cuenta, todos tus datos y colecciones serán eliminados de forma permanente.</p>
+
+        <!-- Botón para abrir la ventana modal -->
+        <button type="button" class="btn btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+            Eliminar Cuenta
+        </button>
+    </div>
+
+    <!-- Ventana modal de confirmación de eliminación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación de Cuenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.
+                    Todos tus datos y colecciones serán eliminados de forma permanente.
+                </div>
+                <div class="modal-footer">
+                    <!-- Botón para cancelar la eliminación -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <!-- Botón para confirmar la eliminación -->
+                    <form action="<?php echo ROUTER ?>" method="post">
+                        <input type="hidden" name="action" value="deleteAccount">
+                        <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap Bundle with Popper -->
-    <script src="<?php echo BOOTSTRAP; ?>bootstrap.bundle.min.js"></script>
+    <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
+
     <script>
-    function editProfile() {
-        // Habilitar los campos del formulario
-        document.getElementById("name").disabled = false;
-        document.getElementById("nick").disabled = false;
-        document.getElementById("dob").disabled = false;
-        document.getElementById("email").disabled = false;
+        // Prevenir el envío del formulario si no se han realizado cambios
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+            if (document.getElementById('name').disabled && document.getElementById('nick').disabled && document.getElementById('dob').disabled && document.getElementById('email').disabled && document.getElementById('current_password').disabled && document.getElementById('new_password').disabled && document.getElementById('confirm_password').disabled) {
+                event.preventDefault();
+            }
+        });
 
-        // Ocultar el botón de "Editar Perfil"
-        document.getElementById("editProfileBtn").style.display = "none";
-        // Mostrar los botones de "Guardar Cambios" y "Cancelar"
-        document.getElementById("saveChangesBtn").style.display = "inline-block";
-        document.getElementById("cancelEditBtn").style.display = "inline-block";
-    }
+        // Anular el copiado de contraseñas y pegado en campos de contraseña
+        document.querySelectorAll('input[type="password"]').forEach(function(input) {
+            input.addEventListener('paste', function(event) {
+                event.preventDefault();
+                return false;
+            });
+            input.addEventListener('copy', function(event) {
+                event.preventDefault();
+                return false;
+            });
+        });
 
-    function cancelEdit() {
-        // Deshabilitar los campos del formulario
-        document.getElementById("name").disabled = true;
-        document.getElementById("nick").disabled = true;
-        document.getElementById("dob").disabled = true;
-        document.getElementById("email").disabled = true;
+        function editProfile() {
+            document.getElementById('name').disabled = false;
+            document.getElementById('name').setAttribute('aria-disabled', 'false');
+            document.getElementById('nick').disabled = false;
+            document.getElementById('nick').setAttribute('aria-disabled', 'false');
+            document.getElementById('dob').disabled = false;
+            document.getElementById('dob').setAttribute('aria-disabled', 'false');
+            document.getElementById('email').disabled = false;
+            document.getElementById('email').setAttribute('aria-disabled', 'false');
+            document.getElementById('current_password').disabled = false;
+            document.getElementById('new_password').disabled = false;
+            document.getElementById('confirm_password').disabled = false;
+            document.getElementById('editProfileBtn').style.display = 'none';
+            document.getElementById('saveChangesBtn').style.display = 'inline-block';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+        }
 
-        // Mostrar el botón de "Editar Perfil"
-        document.getElementById("editProfileBtn").style.display = "inline-block";
-        // Ocultar los botones de "Guardar Cambios" y "Cancelar"
-        document.getElementById("saveChangesBtn").style.display = "none";
-        document.getElementById("cancelEditBtn").style.display = "none";
-    }
+        function cancelEdit() {
+            document.getElementById('name').disabled = true;
+            document.getElementById('name').setAttribute('aria-disabled', 'true');
+            document.getElementById('nick').disabled = true;
+            document.getElementById('nick').setAttribute('aria-disabled', 'true');
+            document.getElementById('dob').disabled = true;
+            document.getElementById('dob').setAttribute('aria-disabled', 'true');
+            document.getElementById('email').disabled = true;
+            document.getElementById('email').setAttribute('aria-disabled', 'true');
+            document.getElementById('current_password').disabled = true;
+            document.getElementById('new_password').disabled = true;
+            document.getElementById('confirm_password').disabled = true;
+            document.getElementById('editProfileBtn').style.display = 'inline-block';
+            document.getElementById('saveChangesBtn').style.display = 'none';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
     </script>
 </body>
 </html>
