@@ -6,3 +6,7 @@ Database Error: Query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown co
 Database Error: Query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nick' in 'where clause'
 Database Error: Query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'nick' in 'where clause'
 Database Error: Query failed: SQLSTATE[21S01]: Insert value list does not match column list: 1136 Column count doesn't match value count at row 1
+Database Error: Connection failed: SQLSTATE[HY000]: General error: 1298 Unknown or incorrect time zone: 'Europe/Madrid'
+Database Error: Connection failed: SQLSTATE[HY000]: General error: 1298 Unknown or incorrect time zone: 'Europe/Madrid'
+Database Error: Connection failed: SQLSTATE[HY000]: General error: 1298 Unknown or incorrect time zone: 'Europe/Madrid'
+Database Error: Connection failed: SQLSTATE[HY000]: General error: 1298 Unknown or incorrect time zone: 'Europe/Madrid'
