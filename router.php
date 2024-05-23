@@ -4,6 +4,7 @@
 // Incluye los archivos necesarios
 include_once('config/const.php');
 include_once(CONTROLLERS . 'UserController.php');
+include_once(CONTROLLERS.'UserProfileController.php');
 
 // Verifica si se ha especificado una acción
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -28,6 +29,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET')
             if($_SERVER['REQUEST_METHOD'] == 'GET'){
                 $userController = new UserController();
                 $userController->logout();
+            }
+            break;
+        case 'user-profile':
+            // Instancia el controlador de usuario y ejecuta la eliminación de cuenta
+            if($_SERVER['REQUEST_METHOD'] == 'GET'){
+                $userController = new UserProfile();
+                $userController->index();
+            }
+            break;
+        case 'updateProfile':
+            // Instancia el controlador de usuario y ejecuta la actualización de perfil
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                $userController = new UserProfile();
+                $userController->updateProfile();
+            }
+            break;
+        case 'deleteAccount':
+            // Instancia el controlador de usuario y ejecuta la eliminación de cuenta
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                $userController = new UserController();
+                $userController->deleteAccount();
             }
             break;
     }
