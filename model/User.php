@@ -28,6 +28,7 @@ class User {
         $this->password = "";
         $this->role = 0;
         $this->lastAccess = null;
+        date_default_timezone_set('Europe/Madrid');
     }
 
     /**
@@ -129,21 +130,26 @@ class User {
                 $resultRol=$conn->query($queryRol);
                 $rowRol=$resultRol->fetch(PDO::FETCH_ASSOC);
                 $this->setLocalRole($rowRol['id']);
-                $query = "INSERT INTO usuarios (nombre_completo, nombre_usuario, fecha_nacimiento, email, password, rol) VALUES (?, ?, ?, ?, ?, ?)";
+                $query = "INSERT INTO usuarios (nombre_completo, nombre_usuario, email, fecha_nacimiento, password, rol) VALUES (:name, :nickname, :email, :dob, :pwd, :role)";
                 $stmt=$conn->returnConnection()->prepare($query);
-                $stmt->bindParam(1, $fullNameFormated, PDO::PARAM_STR);
-                $stmt->bindParam(2, $nickName, PDO::PARAM_STR);
-                $stmt->bindParam(3, $dob, PDO::PARAM_STR);
-                $stmt->bindParam(4, $email, PDO::PARAM_STR);
-                $stmt->bindParam(5, md5($password), PDO::PARAM_STR);
-                $stmt->bindParam(6, $rowRol['id'], PDO::PARAM_INT);
-                $_SESSION['result'] = true;
-                $_SESSION['user_id'] = $conn->lastInsertId();
-                $_SESSION['user_role'] = $this->getLocalRole();
-                $_SESSION['user_nick'] = $this->getNickName();
-                $conn->close();
-                header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha registrado correctamente'));
-                return true;
+                $stmt->bindParam(":name", $fullNameFormated, PDO::PARAM_STR);
+                $stmt->bindParam(":nickname", $nick, PDO::PARAM_STR);
+                $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+                $stmt->bindParam(":dob", $dob, PDO::PARAM_STR);
+                $stmt->bindParam(":pwd", $this->password, PDO::PARAM_STR);
+                $stmt->bindParam(":role", $rowRol['id'], PDO::PARAM_INT);
+                if($stmt->execute()){
+                    $_SESSION['result'] = true;
+                    $_SESSION['user_id'] = $conn->lastInsertId();
+                    $_SESSION['user_role'] = $this->getLocalRole();
+                    $_SESSION['user_nick'] = $this->getNickName();
+                    $conn->close();
+                    header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha registrado correctamente'));
+                    return true;
+                } else {
+                    header('Location: '.BASE_URL.'?result=error&msg='.urlencode('No se ha podido registrar el usuario'));
+                    return false;
+                }
             }
         } catch (Exception $e) {
             header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
@@ -164,28 +170,25 @@ class User {
      * @param string $password Contraseña del usuario.
      * @param string $confirmPassword Confirmación de la contraseña del usuario.
      */
-    public function updateUser(string $name, string $nick, string $dob, string $email, string $password, string $confirmPassword): bool {
+    public function updateUser(string $name, string $nick, string $dob, string $email, string $password): bool {
         $this->setFullName($name);
         $this->setNickName($nick);
         $this->setDateOfBirth($dob);
         $this->setEmail($email);
-
-        // Comprobar si las contraseñas coinciden
-        if($password !== $confirmPassword){
-            header('Location: '.BASE_URL.'?result=error&msg='.urlencode('Las contraseñas no coinciden'));
-            return false;
-        } else {
-            $this->setPassword(md5($password));
-        }
+        $this->setPassword(md5($password));
         $this->setLastAccess($_SESSION['user_id']);
 
         try{
             $conn = new Connection();
             $conn->connect();
-            $query = "UPDATE usuarios SET nombre_completo = ?, nombre_usuario = ?, fecha_nacimiento= ?, email = ?, password = ? WHERE id = ?";
-            $conn->prepare($query);
-            $conn->bindParams('sssssi', $this->getFullName(), $this->getNickName(), $this->getDateOfBirth(), $this->getEmail(), $this->getPassword(), $_SESSION['user_id']);
-            $conn->close();
+            $query = "UPDATE usuarios SET nombre_completo = :name, nombre_usuario = :nick, fecha_nacimiento= :dob, email = :email, password = :pwd WHERE id = :id";
+            $stmt=$conn->prepare($query);
+            $stmt->bindParam(":name", $this->fullName, PDO::PARAM_STR);
+            $stmt->bindParam(":nick", $this->nickName, PDO::PARAM_STR);
+            $stmt->bindParam(":dob", $this->dateOfBirth, PDO::PARAM_STR);
+            $stmt->bindParam(":email", $this->email, PDO::PARAM_STR);
+            $stmt->bindParam(":pwd", $this->password, PDO::PARAM_STR);
+            $stmt->bindParam(":id", $_SESSION['user_id'], PDO::PARAM_INT);
             header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha actualizado correctamente'));
             return true;
         } catch (Exception $e) {
@@ -218,6 +221,39 @@ class User {
             header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
             return false;
         } finally{
+            if($conn!==null){
+                $conn->close();
+            }
+        }
+    }
+
+    /**
+     * Método para obtener un usuario.
+     * @return array|bool Usuario
+     */
+    public function getUserObject(){
+        $conn = new Connection();
+        try{
+            $conn->connect();
+            $query = "SELECT * FROM usuarios WHERE id = ".$_SESSION['user_id'];
+            $result = $conn->query($query);
+            if($result->rowCount() > 0){
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+                $this->setFullName($row['nombre_completo']);
+                $this->setNickName($row['nombre_usuario']);
+                $this->setDateOfBirth($row['fecha_nacimiento']);
+                $this->setEmail($row['email']);
+                $this->setPassword($row['password']);
+                $this->setLocalRole($row['rol']);
+                $this->setLocalLastAccess(new DateTime($row['ultimo_acceso']));
+                return $this;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+            return false;
+        } finally {
             if($conn!==null){
                 $conn->close();
             }
@@ -407,8 +443,8 @@ class User {
      * Método para obtener la fecha de nacimiento del usuario.
      * @return string Fecha de nacimiento del usuario en formato 'YYYY-MM-DD'.
      */
-    public function getDateOfBirth(): date {
-        return $this->dateOfBirth;
+    public function getDateOfBirth(): string {
+        return date('Y-m-d', strtotime($this->dateOfBirth));
     }
 
     /**
