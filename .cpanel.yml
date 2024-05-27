@@ -3,3 +3,12 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/rmissgames/noelperez.rimisszoic.live/videogame_collection
     - /bin/cp -R * $DEPLOYPATH
+    - /bin/chmod 0755 $DEPLOYPATH/config
+    - /bin/chmod 0755 ./controller
+    - /bin/chmod 0755 ./logs
+    - /bin/chmod 0755 ./model
+    - /bin/chmod 0755 ./resources
+    - /bin/chmod 0755 ./config/*.php
+    - /bin/chmod 0755 ./controller/*.php
+    - /bin/chmod 0755 ./model/*.php
+    - /bin/chmod 0755 -R ./resources/
