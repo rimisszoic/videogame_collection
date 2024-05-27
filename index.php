@@ -7,10 +7,9 @@ require_once('config/const.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Videojuegos</title>
+    <title>Game Archive</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="<?php echo BOOTSTRAP; ?>css/bootstrap.min.css">
-
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom CSS -->
@@ -22,7 +21,7 @@ require_once('config/const.php');
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Videojuegos</a>
+            <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Game Archive</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -32,7 +31,7 @@ require_once('config/const.php');
                         <a class="nav-link active" aria-current="page" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Colecciones</a>
+                        <a class="nav-link" href="collections.php">Colecciones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contacto</a>
@@ -46,7 +45,7 @@ require_once('config/const.php');
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                                <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=colection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                                <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
