@@ -24,7 +24,7 @@
             <p>Por favor, espere mientras se realiza la instalación.</p>
         </div>
     </div>
-    <div id="cmtainer" class="container mt-5">
+    <div id="container" class="container mt-5">
         <div class="progress px-1">
             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
@@ -32,6 +32,7 @@
             <div class="step-circle" onclick="displayStep(1)">1</div>
             <div class="step-circle" onclick="displayStep(2)">2</div>
             <div class="step-circle" onclick="displayStep(3)">3</div>
+            <div class="step-circle" onclick="displayStep(4)">4</div>
         </div>
         <div class="step-line"></div>
         <form id="multi-step-form" method="post">
@@ -57,7 +58,9 @@
                 <button type="button" class="btn btn-primary next-step">Siguiente</button>
             </div>
             <div class="step step-2">
-                <h2>Paso 2: Configuración de la cuenta de correo electrónico</h2>
+                <h2>Paso 2: Verificación del servicio de correo electrónico</h2>
+                <p>Se configurará una cuenta de correo predeterminada si no se proporciona una configuración específica.</p>
+                <button type="button"></button>
                 <div class="mb-3">
                     <label for="emailHost">Host de la cuenta de correo electrónico</label>
                     <input type="text" name="emailHost" id="emailHost">
