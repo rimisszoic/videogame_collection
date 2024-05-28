@@ -38,23 +38,24 @@ class User {
      */
     public function logUser(string $nickName, string $password): bool {
         try{
-            $password = md5($password);
             $conn = new Connection();
             $conn->connect();
-            $query = "SELECT * FROM usuarios WHERE nombre_usuario = '$nickName' AND password = '$password'";
-            $result = $conn->query($query);
-            $conn->close();
-            if($result->rowCount() > 0) {
-                $row = $result->fetch(PDO::FETCH_ASSOC);
-                $_SESSION['user_id'] = $row['id'];
-                $_SESSION['user_role'] = $row['rol'];
+            $query = "SELECT * FROM usuarios WHERE nombre_usuario = :nickName";
+            $stmt = $conn->returnConnection()->prepare($query);
+            $stmt->bindParam(':nickName', $nickName, PDO::PARAM_STR);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if($user && password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_role'] = $user['rol'];
                 $_SESSION['user_nick'] = $nickName;
                 $_SESSION['result'] = true;
-                $this->setFullName($row['nombre_completo']);
+                $this->setFullName($user['nombre_completo']);
                 $this->setNickName($nickName);
-                $this->setDateOfBirth($row['fecha_nacimiento']);
-                $this->setEmail($row['email']);
-                $this->setPassword($password);
+                $this->setDateOfBirth($user['fecha_nacimiento']);
+                $this->setEmail($user['email']);
+                $this->setPassword($user['password']);
                 $this->setLastAccess($_SESSION['user_id']);
                 return true;
             } else {
@@ -68,7 +69,7 @@ class User {
                 $conn->close();
             }
         }
-    }
+    }    
 
     /**
      * Método para desloguear un usuario.
@@ -104,7 +105,7 @@ class User {
                     header('Location: '.BASE_URL.'?result=error&msg='.urlencode('Las contraseñas no coinciden'));
                     return false;
                 } else {
-                    $this->setPassword(md5($password));
+                    $this->setPassword(password_hash($password));
                 }
 
                 // Verificar si el nombre comoleto contiene un espacio en blanco
@@ -175,7 +176,7 @@ class User {
         $this->setNickName($nick);
         $this->setDateOfBirth($dob);
         $this->setEmail($email);
-        $this->setPassword(md5($password));
+        $this->setPassword(password_hash($password));
         $this->setLastAccess($_SESSION['user_id']);
 
         try{

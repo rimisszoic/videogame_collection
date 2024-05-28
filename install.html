@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalador</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="resources/css/install.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader-wrapper">
+        <div id="preloader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div id="label">
+            <h2>Instalando...</h2>
+            <p>Por favor, espere mientras se realiza la instalación.</p>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <form id="installForm" method="post">
+            <div class="step" id="step1">
+                <h2>Paso 1: Configuración de la base de datos</h2>
+                <!-- Campos para la configuración de la base de datos -->
+                <div class="mb-3">
+                    <label for="databaseHost" class="form-label">Host de la base de datos</label>
+                    <input type="text" class="form-control" id="databaseHost" name="databaseHost" required>
+                </div>
+                <div class="mb-3">
+                    <label for="databaseName" class="form-label">Nombre de la base de datos</label>
+                    <input type="text" class="form-control" id="databaseName" name="databaseName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="databaseUser" class="form-label">Usuario de la base de datos</label>
+                    <input type="text" class="form-control" id="databaseUser" name="databaseUser" required>
+                </div>
+                <div class="mb-3">
+                    <label for="databasePassword" class="form-label">Contraseña de la base de datos</label>
+                    <input type="password" class="form-control" id="databasePassword" name="databasePassword" required>
+                </div>
+                <button type="button" class="btn btn-primary next-step">Siguiente</button>
+            </div>
+            <div class="step" id="step2" style="display: none;">
+                <h2>Paso 2: Creación del usuario administrador</h2>
+                <!-- Campos para la creación del usuario administrador -->
+                <div class="mb-3">
+                    <label for="registerName" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="registerName" name="registerName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="registerNick" class="form-label">Nick</label>
+                    <input type="text" class="form-control" id="registerNick" name="registerNick" required>
+                </div>
+                <div class="mb-3">
+                    <label for="registerDob" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="registerDob" name="registerDob" required>
+                    <div id="registerDobHelp" class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="registerEmail" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="registerPassword" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="registerPassword" name="registerPassword" required>
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="button" class="btn btn-primary prev-step">Anterior</button>
+                <button type="button" class="btn btn-primary next-step">Siguiente</button>
+            </div>
+            <div class="step" id="step3" style="display: none;">
+                <h2>Iniciando la instalación</h2>
+                <p id="successMessage" style="display: none;">La instalación se ha completado con éxito.</p>
+                <button type="submit" id="submitButton" class="btn btn-primary">Finalizar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="resources/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jQuery -->
+    <script src="resources/js/jquery/jquery-3.7.1.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loader-wrapper').style.display = 'none';
+            // Event listener for the date of birth field
+            document.getElementById('registerDob').addEventListener('change', function() {
+                const dob = new Date(this.value);
+                const today = new Date();
+                const age = today.getFullYear() - dob.getFullYear();
+                if (today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+                if (age < 14) {
+                    this.setCustomValidity('Debes tener al menos 14 años para registrarte.');
+                    document.getElementById('registerDobHelp').textContent = 'Debes tener al menos 14 años para registrarte.';
+                } else {
+                    this.setCustomValidity('');
+                    document.getElementById('registerDobHelp').textContent = '';
+                }
+            });
+        });
+        $(document).ready(function(){
+            const form = $('#installForm');
+            const steps = form.find('.step');
+            let currentStep = 0;
+
+            // Function to show the current step
+            function showStep(stepIndex) {
+                steps.hide();
+                steps.eq(stepIndex).show();
+            }
+
+            // Function to handle to the next step
+            function nextStep() {
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            }
+
+            // Function to handle to the previous step
+            function prevStep() {
+                if (currentStep > 0) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            }
+
+            // Event listener for the next step button
+            $('.next-step').click(nextStep);
+
+            // Event listener for the previous step button
+            $('.prev-step').click(prevStep);
+
+            // AJAX form submission
+            form.on('submit', function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: 'install.php',
+                    method: 'POST',
+                    data: form.serialize(),
+                    beforeSend: function() {
+                        // Show loader
+                        $('#loader-wrapper').show();
+                    },
+                    success: function(response) {
+                        // Hide loader
+                        $('#loader-wrapper').hide();
+                        // Show success message
+                        $('#successMessage').show();
+                        // Disable submit button
+                        $('#submitButton').prop('disabled', true);
+                        // Redierct to index.php after 3 seconds
+                        setTimeout(function(){
+                            window.location.href = 'index.php';
+                        }, 3000);
+                    },
+                    error: function(jqXHR, textstatus, errorThrown) {
+                        console.error('Error: ', textstatus, errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

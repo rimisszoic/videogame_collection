@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('config/const.php');
+require_once('router.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -16,8 +17,6 @@ require_once('config/const.php');
     <link rel="stylesheet" href="<?php echo CSS; ?>passwords.css">
 </head>
 <body>
-    <!-- Precagador -->
-    <div class="spinner"></div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -31,7 +30,7 @@ require_once('config/const.php');
                         <a class="nav-link active" aria-current="page" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="collections.php">Colecciones</a>
+                        <a class="nav-link" href="/collections">Colecciones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contacto</a>
@@ -44,10 +43,10 @@ require_once('config/const.php');
                                 <?php echo ucfirst($_SESSION['user_nick']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                                <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                                <li><a class="dropdown-item" href="/user/profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="/user/collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                                <li><a class="dropdown-item" href="/user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
@@ -69,7 +68,7 @@ require_once('config/const.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo ROUTER; ?>" method="post">
+                    <form action="/login" method="post">
                         <div class="mb-3">
                             <label for="loginNick" class="form-label">Nick</label>
                             <input type="text" class="form-control" id="loginNick" name="nick" required aria-label="Nombre de usuario">
@@ -105,7 +104,7 @@ require_once('config/const.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo ROUTER; ?>" method="post">
+                    <form action="/register" method="post">
                         <div class="mb-3">
                             <label for="registerName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="registerName" name="name" required aria-label="Nombre">

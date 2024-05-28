@@ -6,52 +6,79 @@ include_once('config/const.php');
 include_once(CONTROLLERS . 'UserController.php');
 include_once(CONTROLLERS.'UserProfileController.php');
 
-// Verifica si se ha especificado una acción
-if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Maneja la acción según el valor del parámetro 'action'
-    switch ($_REQUEST['action']) {
-        case 'login':
-            // Instancia el controlador de usuario y ejecuta el inicio de sesión
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $userController = new UserController();
-                $userController->login();
-            }
-            break;
-        case 'register':
-            // Instancia el controlador de usuario y ejecuta el registro
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $userController = new UserController();
-                $userController->register();
-            }
-            break;
-        case 'logout':
-            // Instancia el controlador de usuario y ejecuta el cierre de sesión
-            if($_SERVER['REQUEST_METHOD'] == 'GET'){
-                $userController = new UserController();
-                $userController->logout();
-            }
-            break;
-        case 'user-profile':
-            // Instancia el controlador de usuario y ejecuta la eliminación de cuenta
-            if($_SERVER['REQUEST_METHOD'] == 'GET'){
-                $userController = new UserProfile();
-                $userController->index();
-            }
-            break;
-        case 'updateProfile':
-            // Instancia el controlador de usuario y ejecuta la actualización de perfil
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $userController = new UserProfile();
-                $userController->updateProfile();
-            }
-            break;
-        case 'deleteAccount':
-            // Instancia el controlador de usuario y ejecuta la eliminación de cuenta
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $userController = new UserController();
-                $userController->deleteAccount();
-            }
-            break;
+// Obtiene la ruta solicitada y elimina los parámetros de consulta
+$request_uri=parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Verifica el método de solicitud
+$method = $_SERVER['REQUEST_METHOD'];
+
+function handle_request($controller, $method){
+    if(class_exists($controller)){
+        $controller_instance = new $controller();
+        if(method_exists($controller_instance, $method)){
+            $controller_instance->$method();
+        } else {
+            http_response_code(404);
+            echo '404 Not Found';
+        }
+    } else {
+        http_response_code(404);
+        echo '404 Not Found';
     }
 }
-?>
+
+// Maneja la ruta solicitada
+switch($request_uri){
+    case '/login':
+        if($method == 'POST'){
+            handle_request('UserController', 'login');
+        } else {
+            http_response_code(404);
+            echo '404 Not Found';
+        }
+        break;
+    case '/register':
+        if($method == 'POST'){
+            handle_request('UserController', 'register');
+        } else {
+            http_response_code(404);
+            echo '404 Not Found';
+        }
+        break;
+    case '/user/profile':
+        if($method == 'GET'){
+            handle_request('UserProfileController', 'index');
+        } else {
+            http_response_code(404);
+            echo '404 Not Found';
+        }
+        break;
+    case '/user/profile/update':
+        if($method == 'POST'){
+            handle_request('UserProfileController', 'updateProfile');
+        } else {
+            http_response_code(404);
+            echo '404 Not Found';
+        }
+        break;
+    case '/user/logout':
+        if($method == 'GET'){
+            handle_request('UserController', 'logout');
+        } else {
+            http_response_code(404);
+            echo '404 Not Found';
+        }
+        break;
+    case '/collections':
+        if($method == 'GET'){
+            handle_request('CollectionsController', 'index');
+        } else {
+            http_response_code(404);
+            echo '404 Not Found';
+        }
+        break;
+    default:
+        http_response_code(404);
+        echo '404 Not Found';
+        break;
+}
