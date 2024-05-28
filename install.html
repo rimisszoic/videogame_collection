@@ -24,9 +24,18 @@
             <p>Por favor, espere mientras se realiza la instalación.</p>
         </div>
     </div>
-    <div class="container mt-5">
-        <form id="installForm" method="post">
-            <div class="step" id="step1">
+    <div id="cmtainer" class="container mt-5">
+        <div class="progress px-1">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="step-container d-flex justify-content-between">
+            <div class="step-circle" onclick="displayStep(1)">1</div>
+            <div class="step-circle" onclick="displayStep(2)">2</div>
+            <div class="step-circle" onclick="displayStep(3)">3</div>
+        </div>
+        <div class="step-line"></div>
+        <form id="multi-step-form" method="post">
+            <div class="step step-1">
                 <h2>Paso 1: Configuración de la base de datos</h2>
                 <!-- Campos para la configuración de la base de datos -->
                 <div class="mb-3">
@@ -47,8 +56,25 @@
                 </div>
                 <button type="button" class="btn btn-primary next-step">Siguiente</button>
             </div>
-            <div class="step" id="step2" style="display: none;">
-                <h2>Paso 2: Creación del usuario administrador</h2>
+            <div class="step step-2">
+                <h2>Paso 2: Configuración de la cuenta de correo electrónico</h2>
+                <div class="mb-3">
+                    <label for="emailHost">Host de la cuenta de correo electrónico</label>
+                    <input type="text" name="emailHost" id="emailHost">
+                </div>
+                <div class="mb-3">
+                    <label for="emailUser">Usuario de la cuenta de correo electrónico</label>
+                    <input type="email" name="emailUser" id="emailUser">
+                </div>
+                <div class="mb-3">
+                    <label for="emailPassword">Contraseña de la cuenta de correo electrónico</label>
+                    <input type="password" name="emailPassword" id="emailPassword">
+                </div>
+                <button type="button" class="btn btn-primary prev-step">Anterior</button>
+                <button type="button" class="btn btn-primary next-step">Siguiente</button>
+            </div>
+            <div class="step step-3">
+                <h2>Paso 3: Creación del usuario administrador</h2>
                 <!-- Campos para la creación del usuario administrador -->
                 <div class="mb-3">
                     <label for="registerName" class="form-label">Nombre</label>
@@ -78,9 +104,9 @@
                 <button type="button" class="btn btn-primary prev-step">Anterior</button>
                 <button type="button" class="btn btn-primary next-step">Siguiente</button>
             </div>
-            <div class="step" id="step3" style="display: none;">
+            <div class="step step-4">
                 <h2>Iniciando la instalación</h2>
-                <p id="successMessage" style="display: none;">La instalación se ha completado con éxito.</p>
+                <p id="successMessage">La instalación se ha completado con éxito.</p>
                 <button type="submit" id="submitButton" class="btn btn-primary">Finalizar</button>
             </div>
         </form>
