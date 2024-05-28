@@ -20,8 +20,8 @@
             <span></span>
         </div>
         <div id="label">
-            <h2>Instalando...</h2>
-            <p>Por favor, espere mientras se realiza la instalación.</p>
+            <h2>Cargando...</h2>
+            <p>Por favor, espere mientras se carga la página...</p>
         </div>
     </div>
     <div id="container" class="container mt-5">
@@ -59,8 +59,12 @@
             </div>
             <div class="step step-2">
                 <h2>Paso 2: Verificación del servicio de correo electrónico</h2>
-                <p>Se configurará una cuenta de correo predeterminada si no se proporciona una configuración específica.</p>
-                <button type="button"></button>
+                <p>¿Dispone de un servicio de correo electrónico en su dominio?</p>
+                <button type="button" class="btn btn-primary" id="hasEmailServiceYes">Sí</button>
+                <button type="button" class="btn btn-secondary" id="hasEmailServiceNo">No</button>
+            </div>
+            <div class="step step-3">
+                <h2>Paso 3: Configuración de la cuenta de correo electrónico</h2>
                 <div class="mb-3">
                     <label for="emailHost">Host de la cuenta de correo electrónico</label>
                     <input type="text" name="emailHost" id="emailHost">
@@ -76,7 +80,7 @@
                 <button type="button" class="btn btn-primary prev-step">Anterior</button>
                 <button type="button" class="btn btn-primary next-step">Siguiente</button>
             </div>
-            <div class="step step-3">
+            <div class="step step-4">
                 <h2>Paso 3: Creación del usuario administrador</h2>
                 <!-- Campos para la creación del usuario administrador -->
                 <div class="mb-3">
@@ -98,17 +102,46 @@
                 </div>
                 <div class="mb-3">
                     <label for="registerPassword" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="registerPassword" name="registerPassword" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="registerPassword" name="registerPassword" required onpaste="return false">
+                        <button class="btn btn-outline-secondary" type="button" id="registerPasswordToggle" aria-label="Mostrar contraseña">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength mb-3">
+                        <div class="strength-bar"></div>
+                        <div class="strength-text"></div>
+                    </div>
+                    <div class="pwd_info">
+                        <div class="notify error">La contraseña debe cumplir los siguientes requisitos:</div>
+                        <ul>
+                            <li id="letter" class="invalid">Al menos <strong>una letra</strong></li>
+                            <li id="capital" class="invalid">Al menos <strong>una letra mayúscula</strong></li>
+                            <li id="number" class="invalid">Al menos <strong>un número</strong></li>
+                            <li id="length" class="invalid">Al menos <strong>8 caracteres</strong></li>
+                            <li id="match" class="invalid">Las contraseñas <strong>deben coincidir</strong></li>
+                            <li id="blank" class="invalid">Las contraseñas <strong>no deben tener espacios</strong></li>
+                        </ul>
+                    </div>
+                    <div id="registirPasswordHelp" class="form-text"></div>
                 </div>
                 <div class="mb-3">
                     <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required onpaste="return false">
+                        <button class="btn btn-outline-secondary" type="button" id="confirmPasswordToggle" aria-label="Mostrar contraseña">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    <div id="confirmPasswordHelp" class="form-text"></div>
                 </div>
                 <button type="button" class="btn btn-primary prev-step">Anterior</button>
                 <button type="button" class="btn btn-primary next-step">Siguiente</button>
             </div>
-            <div class="step step-4">
+            <div class="step step-5">
                 <h2>Iniciando la instalación</h2>
+                <div id="installer-spinner" class="spinner-border text-primary" role="status" style="display: none;">
+                    <span class="visually-hidden">Por favor, espere mientras se completa la instalación...</span>
+                </div>
                 <p id="successMessage">La instalación se ha completado con éxito.</p>
                 <button type="submit" id="submitButton" class="btn btn-primary">Finalizar</button>
             </div>
@@ -119,88 +152,9 @@
     <script src="resources/bootstrap/js/bootstrap.min.js"></script>
     <!-- jQuery -->
     <script src="resources/js/jquery/jquery-3.7.1.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('loader-wrapper').style.display = 'none';
-            // Event listener for the date of birth field
-            document.getElementById('registerDob').addEventListener('change', function() {
-                const dob = new Date(this.value);
-                const today = new Date();
-                const age = today.getFullYear() - dob.getFullYear();
-                if (today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
-                    age--;
-                }
-                if (age < 14) {
-                    this.setCustomValidity('Debes tener al menos 14 años para registrarte.');
-                    document.getElementById('registerDobHelp').textContent = 'Debes tener al menos 14 años para registrarte.';
-                } else {
-                    this.setCustomValidity('');
-                    document.getElementById('registerDobHelp').textContent = '';
-                }
-            });
-        });
-        $(document).ready(function(){
-            const form = $('#installForm');
-            const steps = form.find('.step');
-            let currentStep = 0;
-
-            // Function to show the current step
-            function showStep(stepIndex) {
-                steps.hide();
-                steps.eq(stepIndex).show();
-            }
-
-            // Function to handle to the next step
-            function nextStep() {
-                if (currentStep < steps.length - 1) {
-                    currentStep++;
-                    showStep(currentStep);
-                }
-            }
-
-            // Function to handle to the previous step
-            function prevStep() {
-                if (currentStep > 0) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            }
-
-            // Event listener for the next step button
-            $('.next-step').click(nextStep);
-
-            // Event listener for the previous step button
-            $('.prev-step').click(prevStep);
-
-            // AJAX form submission
-            form.on('submit', function(e){
-                e.preventDefault();
-                $.ajax({
-                    url: 'install.php',
-                    method: 'POST',
-                    data: form.serialize(),
-                    beforeSend: function() {
-                        // Show loader
-                        $('#loader-wrapper').show();
-                    },
-                    success: function(response) {
-                        // Hide loader
-                        $('#loader-wrapper').hide();
-                        // Show success message
-                        $('#successMessage').show();
-                        // Disable submit button
-                        $('#submitButton').prop('disabled', true);
-                        // Redierct to index.php after 3 seconds
-                        setTimeout(function(){
-                            window.location.href = 'index.php';
-                        }, 3000);
-                    },
-                    error: function(jqXHR, textstatus, errorThrown) {
-                        console.error('Error: ', textstatus, errorThrown);
-                    }
-                });
-            });
-        });
-    </script>
+    <!-- Passwords JS -->
+    <script src="resources/js/passwords.js"></script>
+    <!-- Installer JS -->
+    <script src="resources/js/installer.js"></script>
 </body>
 </html>

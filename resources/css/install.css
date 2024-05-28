@@ -75,11 +75,37 @@
 .step-container{
     position: relative;
     text-align: center;
-    transform: translateY(-43%);
-    -moz-transform: translateY(-43%);
-    -o-transform: translateY(-43%);
-    -ms-transform: translateY(-43%);
-    -webkit-transform: translateY(-43%);
+    transform: translateY(-52%);
+    -moz-transform: translateY(-52%);
+    -o-transform: translateY(-52%);
+    -ms-transform: translateY(-52%);
+    -webkit-transform: translateY(-52%);
+}
+.step-circle{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2pxc solid #007bff;
+    line-height: 30px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.step-line{
+    position: absolute;
+    top: 14px;
+    left: 50px;
+    width: calc(10%-100px);
+    height: 2px;
+    background: #007bff;
+    z-index: -1;
+}
+#multi-step-form{
+    overflow-x: hidden;
 }
 
 /* Estilos para los pasos que no son visibles inicialmente */
