@@ -14,4 +14,15 @@ define('ROOT', $_SERVER['DOCUMENT_ROOT'] . '/videogame_collection/');
 define('LOGS', ROOT . 'logs/');
 define('RESOURCES', ROOT . 'resources/');
 define('ROUTER', 'router.php');
+/* Constantes para la base de datos */
+define('DB_HOST','localhost');
+define('DB_USER','gam3Coll@bUs3r');
+define('DB_PWD','J4nR#9!pQz_23Ld');
+define('DBNAME','videogame_collection');
+define('ADMIN_EMAIL','rimiss@rimisszoic.live');
+
+/* Constantes para los emails */
+define('EMAIL_HOST','rimisszoic.live');
+define('EMAIL_USER','noreply@noelperez.rimisszoic.live');
+define('EMAIL_PWD','?2&h;@1o$ym??W!?+G5BxxeB');
 ?>

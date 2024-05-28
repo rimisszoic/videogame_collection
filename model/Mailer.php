@@ -11,7 +11,7 @@ class Mailer
 {
     private $mail;
 
-    public function __construct($host='rimisszoic.live', $port=587, $encryption='tls', $username='noreply@noelperez.rimisszoic.live', $password='?2&h;@1o$ym??W!?+G5BxxeB')
+    public function __construct($host=EMAIL_HOST, $port=587, $encryption='tls', $username=EMAIL_USER, $password=EMAIL_PWD)
     {
         $this->mail = new PHPMailer(true);
         $this->mail->isSMTP();
