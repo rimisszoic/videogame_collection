@@ -48,7 +48,7 @@ require_once('router.php');
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/user/profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                                <li><a class="dropdown-item" href="/collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                                <li><a class="dropdown-item" href="/user/collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
