@@ -19,8 +19,6 @@ require_once('router.php');
     <link rel="stylesheet" href="<?php echo CSS; ?>passwords.css">
 </head>
 <body>
-    <!-- Precagador -->
-    <div class="spinner"></div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -180,6 +178,24 @@ require_once('router.php');
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="mt-5 mb-4">Todas las colecciones</h1>
+        <div class="row">
+            <?php foreach ($collections as $collection): ?>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="<?php echo $collection['image']; ?>" class="card-img-top" alt="<?php echo $collection['name']; ?>">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $collection['username']; ?></h5>
+                            <a href="view_collection.php?id=<?php print $collection['id'] ?>" class="btn btn-primary">Ver colección</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
 
