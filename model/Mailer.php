@@ -1,6 +1,4 @@
 <?php
-namespace Model;
-
 require_once(RESOURCES.'mailer/src/PHPMailer.php');
 require_once(RESOURCES.'mailer/src/Exception.php');
 require_once(RESOURCES.'mailer/src/SMTP.php');

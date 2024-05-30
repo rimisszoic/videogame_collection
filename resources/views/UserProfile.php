@@ -3,7 +3,7 @@ if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
 
-include_once(MODELS.'/User.php');
+require_once(MODELS.'/User.php');
 $user=new User();
 $user=$user->getUser();
 ?>
@@ -25,7 +25,7 @@ $user=$user->getUser();
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Videojuegos</a>
+            <a class="navbar-brand" href="<?php echo BASE_URL; ?>">Game Archive</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -35,7 +35,7 @@ $user=$user->getUser();
                         <a class="nav-link active" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Colecciones</a>
+                        <a class="nav-link" href="<?php echo ROOT; ?>collections">Colecciones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contacto</a>
@@ -47,10 +47,10 @@ $user=$user->getUser();
                             <?php echo ucfirst($_SESSION['user_nick']); ?>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=user-profile" aria-current="page"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                            <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/profile" aria-current="page"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/collection"><i class="fa fa-folder"></i>&nbsp;Mi Colección</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -133,7 +133,7 @@ $user=$user->getUser();
                     <!-- Botón para cancelar la eliminación -->
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <!-- Botón para confirmar la eliminación -->
-                    <form action="<?php echo ROUTER ?>" method="post">
+                    <form action="<?php echo ROOT; ?>user/delete-account" method="post">
                         <input type="hidden" name="action" value="deleteAccount">
                         <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
                     </form>

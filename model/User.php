@@ -1,6 +1,4 @@
 <?php
-namespace Model;
-
 if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
@@ -78,6 +76,8 @@ class User {
      */
     public function unlogUser(): void {
         $this->setLastAccess($_SESSION['user_id']);
+        // Eliminar las variables de sesión
+        session_unset();
         session_destroy();
         // Recargar la vista
         header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha deslogueado correctamente'));
@@ -214,6 +214,7 @@ class User {
             $query = "DELETE FROM usuarios WHERE id = ".$_SESSION['user_id'];
             if($conn->query($query)){
                 $this->unlogUser();
+                $this->
                 header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha eliminado correctamente'));
                 return true;
             } else {
@@ -232,11 +233,11 @@ class User {
 
     /**
      * Método para obtener un usuario.
-     * @return array|bool Usuario
+     * @return self|bool Usuario o false si no se encuentra el usuario.
      */
-    public function getUserObject(){
-        $conn = new Connection();
+    public function getUserObject(): self|bool{
         try{
+            $conn = new Connection();
             $conn->connect();
             $query = "SELECT * FROM usuarios WHERE id = ".$_SESSION['user_id'];
             $result = $conn->query($query);
@@ -268,8 +269,8 @@ class User {
      * @return array Usuario
      */
     public function getUser(): bool  {
-        $conn = new Connection();
         try {
+            $conn = new Connection();
             $conn->connect();
             $query = "SELECT * FROM usuarios WHERE id = ".$_SESSION['user_id'];
             $result = $conn->query($query);
@@ -300,12 +301,21 @@ class User {
      * @return array Usuarios
      */
     public function getUsers(): array {
-        $conn = new Connection();
-        $conn->connect();
-        $query = "SELECT * FROM usuarios";
-        $result = $conn->query($query);
-        $conn->close();
-        return $result;
+        try{
+            $conn = new Connection();
+            $conn->connect();
+            $query = "SELECT * FROM usuarios";
+            $result = $conn->query($query);
+            $conn->close();
+            return $result;
+        } catch (Exception $e) {
+            return array();
+            header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
+        }
     }
 
     /**
@@ -313,8 +323,8 @@ class User {
      * @return array Roles
      */
     public function getRoles(): array {
-        $conn = new Connection();
         try {
+            $conn = new Connection();
             $conn->connect();
             $query = "SELECT * FROM roles";
             $result = $conn->query($query);
@@ -328,7 +338,7 @@ class User {
             }
         } catch (Exception $e) {
             return array();
-            header(urlencode('Location: '.BASE_URL.'?result=error&msg='.$e->getMessage()));
+            header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
         } finally {
             if($conn!==null){
                 $conn->close();
@@ -342,12 +352,19 @@ class User {
      * @param int $roleId ID del rol.
      */
     public function setRole(int $userId, int $roleId): void {
-        $conn = new Connection();
-        $conn->connect();
-        $query = "UPDATE usuarios SET rol = $roleId WHERE id = $userId";
-        $conn->query($query);
-        $conn->close();
-        $this->setLocalRole($roleId);
+        try{
+            $conn = new Connection();
+            $conn->connect();
+            $query = "UPDATE usuarios SET rol = $roleId WHERE id = $userId";
+            $conn->query($query);
+            $this->setLocalRole($roleId);
+        } catch (Exception $e) {
+            header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
+        }
     }
 
     /**
@@ -356,17 +373,26 @@ class User {
      * @return int ID del rol.
      */
     public function getRole(int $userId): int {
-        $conn = new Connection();
-        $conn->connect();
-        $query = "SELECT role FROM usuarios WHERE id = $userId";
-        $result = $conn->query($query);
-        $role = 0; // Valor predeterminado
-        if($result->rowCount() > 0) {
-            $row = $result->fetch(PDO::FETCH_ASSOC);
-            $role = $row['rol'];
+        try{
+            $conn = new Connection();
+            $conn->connect();
+            $query = "SELECT role FROM usuarios WHERE id = $userId";
+            $result = $conn->query($query);
+            $role = 0; // Valor predeterminado
+            if($result->rowCount() > 0) {
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+                $role = $row['rol'];
+            }
+            $conn->close();
+            return $role;
+        } catch (Exception $e) {
+            return 0;
+            header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
         }
-        $conn->close();
-        return $role;
     }
 
     /**
@@ -375,17 +401,26 @@ class User {
      * @return string Fecha y hora del último acceso en formato 'YYYY-MM-DD HH:MM:SS'.
      */
     public function getLastAccess(int $userId): string {
-        $conn = new Connection();
-        $conn->connect();
-        $query = "SELECT ultimo_acceso FROM usuarios WHERE id = $userId";
-        $result = $conn->query($query);
-        $lastAccess = ""; // Valor predeterminado si no se encuentra ningún acceso
-        if($result->rowCount() > 0) {
-            $row = $result->fetch(PDO::FETCH_ASSOC);
-            $lastAccess = $row['ultimo_acceso'];
+        try{
+            $conn = new Connection();
+            $conn->connect();
+            $query = "SELECT ultimo_acceso FROM usuarios WHERE id = $userId";
+            $result = $conn->query($query);
+            $lastAccess = ""; // Valor predeterminado si no se encuentra ningún acceso
+            if($result->rowCount() > 0) {
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+                $lastAccess = $row['ultimo_acceso'];
+            }
+            $conn->close();
+            return $lastAccess;
+        } catch (Exception $e) {
+            return "";
+            header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+        } finally {
+            if($conn!==null){
+                $conn->close();
+            }
         }
-        $conn->close();
-        return $lastAccess;
     }
 
     /**
@@ -393,8 +428,8 @@ class User {
      * @param int $userId ID del usuario.
      */
     public function setLastAccess(int $userId): void {
-        $conn = new Connection();
         try{
+            $conn = new Connection();
             $conn->connect();
             $query = "UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = $userId";
             $conn->query($query);
