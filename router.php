@@ -7,9 +7,9 @@ if(session_status() == PHP_SESSION_NONE){
 }
 
 // Incluye los archivos necesarios
-include_once('config/const.php');
-include_once(CONTROLLERS . 'UserController.php');
-include_once(CONTROLLERS.'UserProfileController.php');
+require_once('config/const.php');
+require_once(CONTROLLERS . 'UserController.php');
+require_once(CONTROLLERS.'UserProfileController.php');
 
 // Obtiene la ruta solicitada y elimina los parámetros de consulta
 $request_uri=parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -94,6 +94,14 @@ switch($request_uri){
             show_404();
         }
         break;
+    case '/user/delete-account':
+        if($method == 'POST' && isAuthenticated() && $_POST['action'] == 'deleteAccount'){
+            handle_request('UserController', 'deleteAccount');
+        } else {
+            show_404();
+        }
+        break;
+    case '/videogame_collection/collections':
     case '/collections':
         if($method == 'GET'){
             handle_request('CollectionsController', 'index');
