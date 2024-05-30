@@ -1,0 +1,15 @@
+/* collections.css */
+.collection-card{
+    border: 2px solid;
+    border-image-slice: 1;
+    border-width: 3px;
+    border-image: linear-gradient(45deg, #ff6b6b, #ff9f43, #1dd1a1, #48dbfb, #5f27cd);
+}
+.collection-card img{
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.collection-card .card-body{
+    text-align: center;
+}
