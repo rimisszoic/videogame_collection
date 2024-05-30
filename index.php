@@ -27,10 +27,16 @@ require_once('router.php');
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?php echo BASE_URL; ?>">Inicio</a>
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/collections">Colecciones</a>
+                        <a class="nav-link active" aria-current="page" href="<?php echo ROOT; ?>collections">Colecciones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo ROOT; ?>games">Juegos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo ROOT; ?>platforms">Plataformas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contacto</a>
@@ -104,7 +110,8 @@ require_once('router.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/register" method="post">
+                    <?php $dobInvalidCookie=isset($_COOKIE['dob_invalid']) ? true : false; ?>
+                    <form action="/register" method="post" <?php if ($dobInvalidCookie) echo 'onsubmit="return false"'; ?>>
                         <div class="mb-3">
                             <label for="registerName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="registerName" name="name" required aria-label="Nombre">
@@ -120,14 +127,6 @@ require_once('router.php');
                             <input type="date" class="form-control" id="registerDob" name="dob" required aria-label="Fecha de nacimiento" max="<?php echo date('Y-m-d', strtotime('-14 years')); ?>">
                             <div id="registerDobHelp" class="form-text"></div>
                         </div>
-                        <?php
-                        $minAge = 14;
-                        $minDate = date('Y-m-d', strtotime("-$minAge years"));
-                        $selectedDate = $_POST['dob'] ?? '';
-                        if ($selectedDate > $minDate) {
-                            echo '<div class="alert alert-danger" role="alert">Debes tener al menos 14 años para registrarte.</div>';
-                        }
-                        ?>
                         <div class="mb-3">
                             <label for="registerEmail" class="form-label">Correo electrónico</label>
                             <input type="email" class="form-control" id="registerEmail" name="email" required aria-label="Correo electrónico">
