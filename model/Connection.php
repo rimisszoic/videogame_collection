@@ -1,6 +1,4 @@
 <?php
-namespace Model;
-
 require_once(CONFIG.'Database.php');
 
 // Clase para manejar la conexión con la base de datos específicamente
