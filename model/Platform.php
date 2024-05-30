@@ -1,9 +1,5 @@
 <?php
-namespace Model;
-
 require_once('Connection.php');
-
-use Model\Connection;
 
 class Platform
 {
