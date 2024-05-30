@@ -1,9 +1,5 @@
 <?php
-namespace Model;
-
 require_once('Connection.php');
-
-use Model\Connection;
 
 class Genre
 {
@@ -29,6 +25,19 @@ class Genre
             return $list;
         } catch (Exception $e) {
             header('Location: '.ROOT.'/genres?result=error&msg='.$e->getMessage());
+        }
+    }
+
+    public function getGenre($id)
+    {
+        try {
+            $connection = new Connection();
+            $sql = "SELECT * FROM generos WHERE id=:id";
+            $params = [':id' => $id];
+            $genre = $connection->execute($sql, $params);
+            return new Genre($genre['id'], $genre['nombre']);
+        } catch (Exception $e) {
+            header('Location: '.ROOT.'/collection/view_collection?result=error&msg='.$e->getMessage());
         }
     }
 

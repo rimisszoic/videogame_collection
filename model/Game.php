@@ -1,25 +1,20 @@
 <?php
-namespace Model;
-
 require_once('Connection.php');
 require_once('Genre.php');
 require_once('Platform.php');
 
-use Model\Connection;
-use Model\Genre;
-use Model\Platform;
-
-
 class Game
 {
+    private int $id;
     private string $name;
     private Genre $genre;
     private Platform $platform;
     private string $launchDate;
     private string $cover;
 
-    public function __construct(string $name, Genre $genre, Platform $platform, string $launchDate, string $cover)
+    public function __construct(int $id, string $name, Genre $genre, Platform $platform, string $launchDate, string $cover)
     {
+        $this->id = $id;
         $this->name = $name;
         $this->genre = $genre;
         $this->platform = $platform;
@@ -78,13 +73,13 @@ class Game
         $sql = "SELECT * FROM games WHERE id=:id";
         $params = [':id' => $id];
         $game = $connection->query($sql, $params);
-        return new Game($game['name'], Genre::getGenre($game['genre_id']), Platform::getPlatform($game['platform_id']), $game['launch_date'], $game['cover']);
+        return new Game($game['nombre'], Genre::getGenre($game['genero']), Platform::getPlatform($game['platforma']), $game['fecha_lanzamiento'], $game['portada']);
     }
 
     public function addToCollection(int $userId)
     {
         $connection = new Connection();
-        $sql = "INSERT INTO collections (user_id, game_id) VALUES (:userId, :gameId)";
+        $sql = "INSERT INTO collections (usuario, juego) VALUES (:userId, :gameId)";
         $params = [':userId' => $userId, ':gameId' => $this->getId()];
         $connection->execute($sql, $params);
     }

@@ -1,55 +1,72 @@
 <?php
-namespace Model;
-
 require_once('Connection.php');
-
-use Model\Connection;
 
 class Gallery
 {
     private int $id;
     private array $pictures;
 
-    public function __construct(int $id, array $pictures)
+    public function __construct(int $id=0, array $pictures=[])
     {
         $this->id = $id;
         $this->pictures = $pictures;
+
     }
 
     public function addPicture(string $picture): void
     {
-        $this->pictures[] = $picture;
-        $connection = new Connection();
-        $sql = "INSERT INTO galleries (name, description, cover) VALUES (:name, :description, :cover)";
-        $params = [
-            ':name' => $this->name,
-            ':description' => $this->description,
-            ':cover' => $this->cover
-        ];
-        $connection->execute($sql, $params);
+        try{
+            $connection = new Connection();
+            $sql = "INSERT INTO galeria_imagenes (imagen) VALUES (:image)";
+            $connection->query($sql, ['image' => $picture]);
+            $this->pictures[] = $picture;
+        } catch (Exception $e) {
+            header('Location: '.ROOT.'/collections/view_collection?result=error&msg='.$e->getMessage());
+            exit();
+        } finally{
+            if($connection!=null){
+                $connection->close();
+            }
+        }
     }
 
     public function getPictures(): array
     {
         try{
             $connection = new Connection();
-            $sql = "SELECT * FROM galeria_imagenes";
+            $sql = "SELECT * FROM galeria_imagenes where id=$this->id";
             $picturesData = $connection->query($sql);
+            $picturesData = $picturesData->fetch(PDO::FETCH_ASSOC);
             $pictures = [];
 
             foreach ($picturesData as $pictureData) {
-                $pictures[] = new Gallery(
-                    $pictureData['id'],
-                    $pictureData['imagen'],
-                );
+                $this->addPicture($pictureData['imagen']);
             }
-
             return $pictures;
         } catch (Exception $e) {
-            header('Location: '.ROOT.'/galleries?result=error&msg='.$e->getMessage());
+            header('Location: '.ROOT.'/collections/view_collection?result=error&msg='.$e->getMessage());
             exit;
         } finally{
-            $connection->close();
+            if($connection!=null){
+                $connection->close();
+            }
+        }
+    }
+
+    public function deleteGallery(int $id): void
+    {
+        try{
+            $connection = new Connection();
+            $sql = "DELETE FROM galeria_imagenes WHERE id=:id";
+            $connection->query($sql, ['id' => $id]);
+            $this->pictures = [];
+        } catch (Exception $e) {
+            header('Location: '.ROOT.'/collections/view_collection?result=error&msg='.$e->getMessage());
+            exit();
+        } finally{
+            if($connection!=null){
+                $connection->close();
+            }
         }
     }
 }
