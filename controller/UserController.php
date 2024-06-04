@@ -38,12 +38,12 @@ class UserController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Validar y procesar datos de registro
             
-            // Validar que el usuario tiene al menos 14 años
-            $minAge=14;
+            // Validar que el usuario tiene al menos 18 años
+            $minAge=18;
             $minDate=date('Y-m-d', strtotime("-$minAge years"));
             if($_POST['dob']>$minDate){
                 setcookie('dob_invalid',$_POST['dob'],time()+86400*30,'/'); // Cookie para bloquear el campo de fecha de nacimiento
-                header('Location: ' . BASE_URL . '?result=error&msg='.urlencode('Debes tener al menos 14 años para registrarte'));
+                header('Location: ' . BASE_URL . '?result=error&msg='.urlencode('Debes tener al menos 18 años para registrarte'));
                 exit();
             } else {
                 $user = new User();
