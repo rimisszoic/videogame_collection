@@ -22,22 +22,10 @@ create table usuarios(
     FOREIGN KEY (rol) REFERENCES roles(id)
 );
 
-create table colecciones(
-    id int not null auto_increment primary key,
-    usuario int not null,
-    FOREIGN KEY (usuario) REFERENCES usuarios(id)
-);
-
-create table imagenes_galeria(
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    imagen varchar(255) NOT NULL,
-);
 
 create table generos(
     id int not null auto_increment primary key,
-    nombre varchar(100) not null,
-    coleccion int not null,
-    FOREIGN KEY (coleccion) REFERENCES colecciones(id)
+    nombre varchar(100) not null
 );
 
 create table plataformas(
@@ -55,12 +43,10 @@ create table juegos(
     FOREIGN KEY (plataforma) REFERENCES plataformas(id)
 );
 
-create table juegos_generos(
-    juego int not null,
-    genero int not null,
-    PRIMARY KEY (juego, genero),
-    FOREIGN KEY (juego) REFERENCES juegos(id),
-    FOREIGN KEY (genero) REFERENCES generos(id)
+create table colecciones(
+    id int not null auto_increment primary key,
+    usuario int not null,
+    FOREIGN KEY (usuario) REFERENCES usuarios(id)
 );
 
 create table coleccion_juegos(
@@ -70,3 +56,17 @@ create table coleccion_juegos(
     FOREIGN KEY (coleccion) REFERENCES colecciones(id),
     FOREIGN KEY (juego) REFERENCES juegos(id)
 );
+
+SET GLOBAL log_bin_trust_function_creators = 1; 
+
+DELIMITER $$
+CREATE TRIGGER crear_coleccion_nuevo_usuario
+AFTER INSERT ON usuarios
+FOR EACH ROW
+BEGIN
+    INSERT INTO colecciones (usuario) VALUES (NEW.id);
+END$$
+
+DELIMITER ;
+
+SET GLOBAL log_bin_trust_function_creators = 0; 

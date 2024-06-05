@@ -1,21 +1,10 @@
 <?php
-// router.php
-
-// Inicia la sesión si no está iniciada
 if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
-
-// Incluye los archivos necesarios
 require_once('config/const.php');
 require_once(CONTROLLERS . 'UserController.php');
-require_once(CONTROLLERS.'UserProfileController.php');
-
-// Obtiene la ruta solicitada y elimina los parámetros de consulta
-$request_uri=parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-// Verifica el método de solicitud
-$method = $_SERVER['REQUEST_METHOD'];
+require_once(CONTROLLERS . 'UserProfileController.php');
 
 /**
  * Maneja la solicitud de la ruta solicitada y llama al método correspondiente
@@ -53,63 +42,38 @@ function isAuthenticated(){
     return isset($_SESSION['user_id']);
 }
 
-// Maneja la ruta solicitada
-switch($request_uri){
-    case '/videogame_collection/':
-    case '/videogame_collection/index.php':
-    case '/':
-        break;
-    case '/login':
-        if($method == 'POST' && ($_POST['action'] == 'login')){
+// Verifica si se ha especificado una acción
+if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
+    // Maneja la acción según el valor del parámetro 'action'
+    switch($_REQUEST['action']){
+        case 'login':
             handle_request('UserController', 'login');
-        } else {
-            show_404();
-        }
-        break;
-    case '/register':
-        if($method == 'POST' && ($_POST['action'] == 'register')){
+            break;
+        case 'logout':
+            if(isAuthenticated()){
+                handle_request('UserController', 'logout');
+            } else {
+                header('Location: '.BASE_URL);
+            }
+            break;
+        case 'register':
             handle_request('UserController', 'register');
-        } else {
+            break;
+        case 'update':
+            handle_request('UserProfileController', 'update');
+            break;
+        case 'delete-account':
+            handle_request('UserProfileController', 'deleteAccount');
+            break;
+        case 'user-profile':
+            if(isAuthenticated()){
+                handle_request('UserProfileController', 'index');
+            } else {
+                header('Location: '.BASE_URL);
+            }
+            break;
+        default:
             show_404();
-        }
-        break;
-    case '/user/profile':
-        if($method == 'GET' && isAuthenticated()){
-            handle_request('UserProfileController', 'index');
-        } else {
-            show_404();
-        }
-        break;
-    case '/user/profile/update':
-        if($method == 'POST' && isAuthenticated()){
-            handle_request('UserProfileController', 'updateProfile');
-        } else {
-            show_404();
-        }
-        break;
-    case '/user/logout':
-        if($method == 'GET' && isAuthenticated()){
-            handle_request('UserController', 'logout');
-        } else {
-            show_404();
-        }
-        break;
-    case '/user/delete-account':
-        if($method == 'POST' && isAuthenticated() && $_POST['action'] == 'deleteAccount'){
-            handle_request('UserController', 'deleteAccount');
-        } else {
-            show_404();
-        }
-        break;
-    case '/videogame_collection/collections':
-    case '/collections':
-        if($method == 'GET'){
-            handle_request('CollectionsController', 'index');
-        } else {
-            show_404();
-        }
-        break;
-    default:
-        show_404();
-        break;
+            break;
+    }
 }

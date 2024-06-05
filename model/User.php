@@ -5,7 +5,8 @@ if(session_status() == PHP_SESSION_NONE){
 require_once(MODELS.'Connection.php');
 
 /**
- * Clase para representar un usuario.
+ * Clase User
+ * Rrepresenta un usuario y proporciona métodos para manejar usuarios.
  */
 class User {
     // Propiedades de la clase User
@@ -18,7 +19,8 @@ class User {
     private ?DateTime $lastAccess;
 
     /**
-     * Constructor de la clase User.
+     * Constructor
+     * Inicializa las propiedades del usuario.
      */
     public function __construct() {
         $this->fullName = "";
@@ -32,9 +34,10 @@ class User {
     }
 
     /**
-     * Método para loguear un usuario.
-     * @param string $email Correo electrónico del usuario.
+     * Inicia la sesión de un usuario.
+     * @param string $nickName Nombre de usuario.
      * @param string $password Contraseña del usuario.
+     * @return bool Resultado de la operación.
      */
     public function logUser(string $nickName, string $password): bool {
         try{
@@ -51,12 +54,8 @@ class User {
                 $_SESSION['user_role'] = $user['rol'];
                 $_SESSION['user_nick'] = $nickName;
                 $_SESSION['result'] = true;
-                $this->setFullName($user['nombre_completo']);
-                $this->setNickName($nickName);
-                $this->setDateOfBirth($user['fecha_nacimiento']);
-                $this->setEmail($user['email']);
-                $this->setPassword($user['password']);
-                $this->setLastAccess($_SESSION['user_id']);
+                $this->mapUser($user);
+                $this->setLastAccess($user['id']);
                 return true;
             } else {
                 return false;
@@ -72,16 +71,20 @@ class User {
     }    
 
     /**
-     * Método para desloguear un usuario.
+     * Método para cerrar la sesión de un usuario.
+     * @param string $msg Mensaje a mostrar.
+     * @param string $result Resultado de la operación (ok por defecto).
+     * @param bool $redirect Redirigir a la página de inicio (true por defecto). Si se establece a false, no se redirige.
      */
-    public function unlogUser(): void {
+    public function unlogUser($msg='El usuario ha cerrado sesión correctamente', $result='ok', $redirect=true): void {
         $this->setLastAccess($_SESSION['user_id']);
         // Eliminar las variables de sesión
         session_unset();
         session_destroy();
-        // Recargar la vista
-        header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha deslogueado correctamente'));
-        exit();
+        if($redirect){
+            header('Location: '.BASE_URL.'?result='.$result.'&msg='.urlencode($msg));
+            exit();
+        }
     }
 
     /**
@@ -98,8 +101,12 @@ class User {
         try{
             $conn = new Connection();
             $conn->connect();
-            $query = "SELECT * FROM usuarios WHERE email = '$email' OR nombre_usuario = '$nick'";
-            $result = $conn->query($query);
+            $query = "SELECT * FROM usuarios WHERE email = :email OR nombre_usuario = :nick";
+            $stmt = $conn->returnConnection()->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':nick', $nick, PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if($result->rowCount() > 0) {
                 return false;
             } else {
@@ -173,12 +180,17 @@ class User {
      * @param string $password Contraseña del usuario.
      * @param string $confirmPassword Confirmación de la contraseña del usuario.
      */
-    public function updateUser(string $name, string $nick, string $dob, string $email, string $password): bool {
+    public function updateUser(string $name, string $nick, string $dob, string $email, string $password=''): bool {
         $this->setFullName($name);
         $this->setNickName($nick);
         $this->setDateOfBirth($dob);
         $this->setEmail($email);
-        $this->setPassword(password_hash($password));
+        if($password !== ''){
+            $this->setPassword(password_hash($password, PASSWORD_DEFAULT));
+        } else {
+            // Si no se ha especificado una contraseña, se mantiene la contraseña actual
+            $this->setPassword($this->getPassword());
+        }
         $this->setLastAccess($_SESSION['user_id']);
 
         try{
@@ -213,8 +225,7 @@ class User {
             $conn->connect();
             $query = "DELETE FROM usuarios WHERE id = ".$_SESSION['user_id'];
             if($conn->query($query)){
-                $this->unlogUser();
-                $this->
+                $this->unlogUser('','',false);
                 header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha eliminado correctamente'));
                 return true;
             } else {
@@ -232,10 +243,25 @@ class User {
     }
 
     /**
+     * Método privado para asignar valores de usuario a las propiedades de la clase.
+     * @param array $user Datos del usuario.
+     */
+    private function mapUser(array $user): void {
+        $this->setFullName($user['nombre_completo']);
+        $this->setNickName($user['nombre_usuario']);
+        $this->setDateOfBirth($user['fecha_nacimiento']);
+        $this->setEmail($user['email']);
+        $this->setPassword($user['password']);
+        $this->setLocalRole($user['rol']);
+        $this->setLocalLastAccess(new DateTime($user['ultimo_acceso']));
+    }
+
+
+    /**
      * Método para obtener un usuario.
      * @return self|bool Usuario o false si no se encuentra el usuario.
      */
-    public function getUserObject(): self|bool{
+    public static function getUser(): self|bool{
         try{
             $conn = new Connection();
             $conn->connect();
@@ -243,14 +269,15 @@ class User {
             $result = $conn->query($query);
             if($result->rowCount() > 0){
                 $row = $result->fetch(PDO::FETCH_ASSOC);
-                $this->setFullName($row['nombre_completo']);
-                $this->setNickName($row['nombre_usuario']);
-                $this->setDateOfBirth($row['fecha_nacimiento']);
-                $this->setEmail($row['email']);
-                $this->setPassword($row['password']);
-                $this->setLocalRole($row['rol']);
-                $this->setLocalLastAccess(new DateTime($row['ultimo_acceso']));
-                return $this;
+                $user = new User();
+                $user->setFullName($row['nombre_completo']);
+                $user->setNickName($row['nombre_usuario']);
+                $user->setDateOfBirth($row['fecha_nacimiento']);
+                $user->setEmail($row['email']);
+                $user->setPassword($row['password']);
+                $user->setLocalRole($row['rol']);
+                $user->setLocalLastAccess(new DateTime($row['ultimo_acceso']));
+                return $user;
             } else {
                 return false;
             }
@@ -264,50 +291,31 @@ class User {
         }
     }
 
-    /**
-     * Método para obtener un usuario.
-     * @return array Usuario
-     */
-    public function getUser(): bool  {
-        try {
-            $conn = new Connection();
-            $conn->connect();
-            $query = "SELECT * FROM usuarios WHERE id = ".$_SESSION['user_id'];
-            $result = $conn->query($query);
-            if($result->rowCount() > 0) {
-                $row = $result->fetch(PDO::FETCH_ASSOC);
-                $this->setFullName($row['nombre_completo']);
-                $this->setNickName($row['nombre_usuario']);
-                $this->setDateOfBirth($row['fecha_nacimiento']);
-                $this->setEmail($row['email']);
-                $this->setPassword($row['password']);
-                $this->setLocalRole($row['rol']);
-                $this->setLocalLastAccess(new DateTime($row['ultimo_acceso']));
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception $e) {
-            return false;
-        } finally {
-            if($conn!==null){
-                $conn->close();
-            }
-        }
-    }
 
     /**
-     * Método para obtener todos los usuarios.
+     * Método estático para obtener todos los usuarios.
      * @return array Usuarios
      */
-    public function getUsers(): array {
+    public static function getUsers(): array {
         try{
             $conn = new Connection();
             $conn->connect();
             $query = "SELECT * FROM usuarios";
             $result = $conn->query($query);
+            $users = array();
+            while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $user = new User();
+                $user->setFullName($row['nombre_completo']);
+                $user->setNickName($row['nombre_usuario']);
+                $user->setDateOfBirth($row['fecha_nacimiento']);
+                $user->setEmail($row['email']);
+                $user->setPassword($row['password']);
+                $user->setLocalRole($row['rol']);
+                $user->setLocalLastAccess(new DateTime($row['ultimo_acceso']));
+                $users[] = $user;
+            }
             $conn->close();
-            return $result;
+            return $users;
         } catch (Exception $e) {
             return array();
             header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));

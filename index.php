@@ -1,7 +1,8 @@
 <?php
-session_start();
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
 require_once('config/const.php');
-require_once('router.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -27,13 +28,10 @@ require_once('router.php');
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>">Inicio</a>
+                        <a class="nav-link active" aria-current="page" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?php echo ROOT; ?>collections">Colecciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>games">Juegos</a>
+                        <a class="nav-link" href="<?php echo ROOT; ?>collections">Colecciones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo ROOT; ?>platforms">Plataformas</a>
@@ -49,7 +47,7 @@ require_once('router.php');
                                 <?php echo ucfirst($_SESSION['user_nick']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/user/profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="router.php?"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
                                 <li><a class="dropdown-item" href="/user/collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
@@ -64,7 +62,7 @@ require_once('router.php');
             </div>
         </div>
     </nav>
-
+    
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -181,6 +179,7 @@ require_once('router.php');
     <!-- Bootstrap Bundle with Popper -->
     <script src="<?php echo BOOTSTRAP; ?>js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+
     <!-- Bootstrap Notify JavaScript -->
     <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
     <script src="<?php echo JS; ?>notifications.js"></script>
