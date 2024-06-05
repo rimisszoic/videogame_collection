@@ -10,23 +10,28 @@ require_once(MODELS.'User.php');
 class UserController {
     public function login()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Validar y procesar datos de inicio de sesión
-            $user = new User();
-            $result = $user->logUser($_POST['nick'], $_POST['password']);
-            if ($result) {
-                // Redirigir al dashboard si el inicio de sesión es exitoso
-                header('Location: ' . BASE_URL . '?result=ok&msg='.urlencode('El usuario se ha logueado correctamente'));
-                exit();
+        if(isset($_SESSION['user_id'])){
+            header('Location: '.BASE_URL.'?result=error&msg='.urlencode('Ya has iniciado sesión'));
+            exit();
+        } else {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                // Validar y procesar datos de inicio de sesión
+                $user = new User();
+                $result = $user->logUser($_POST['nick'], $_POST['password']);
+                if ($result) {
+                    // Redirigir al dashboard si el inicio de sesión es exitoso
+                    header('Location: ' . BASE_URL . '?result=ok&msg='.urlencode('El usuario se ha logueado correctamente'));
+                    exit();
+                } else {
+                    // Mostrar mensaje de error en la vista
+                    header('Location: ' . BASE_URL . '?result=error&msg='.urlencode('Usuario o contraseña incorrectos'));
+                    exit();
+                }
             } else {
-                // Mostrar mensaje de error en la vista
-                header('Location: ' . BASE_URL . '?result=error&msg='.urlencode('Usuario o contraseña incorrectos'));
+                // Si la solicitud no es POST, redirigir a la página principal
+                header('Location: ' . BASE_URL);
                 exit();
             }
-        } else {
-            // Si la solicitud no es POST, redirigir a la página principal
-            header('Location: ' . BASE_URL);
-            exit();
         }
     }
 
@@ -71,6 +76,7 @@ class UserController {
         $user= new User();
         if($user->getUser() === true){
             $user->unlogUser();
+            header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha deslogueado correctamente'));
         }
     }
     
