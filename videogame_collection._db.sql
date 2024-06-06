@@ -69,4 +69,25 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
+CREATE TRIGGER borrar_coleccion_usuario_borrado
+BEFORE DELETE ON usuarios
+FOR EACH ROW
+BEGIN
+    -- Obtener el id de la coleccion del usuario
+    DECLARE id_coleccion INT;
+
+    SELECT c.id
+    from coleccion_juegos cj join colecciones c on cj.coleccion = c.id
+    where c.usuario = OLD.id
+    INTO id_coleccion;
+
+    -- Borrar los juegos de la coleccion
+    DELETE FROM coleccion_juegos WHERE coleccion = id_coleccion;
+    -- Borrar la coleccion
+    DELETE FROM colecciones WHERE usuario = OLD.id;
+END$$
+
+DELIMITER ;
+
 SET GLOBAL log_bin_trust_function_creators = 0; 
