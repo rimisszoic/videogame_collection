@@ -2,6 +2,7 @@
 if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
+
 require_once('config/const.php');
 require_once(CONTROLLERS . 'UserController.php');
 require_once(CONTROLLERS . 'UserProfileController.php');
@@ -47,26 +48,34 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
     // Maneja la acción según el valor del parámetro 'action'
     switch($_REQUEST['action']){
         case 'login':
-            handle_request('UserController', 'login');
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                handle_request('UserController', 'login');
+            }
             break;
         case 'logout':
-            if(isAuthenticated()){
+            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'GET'){
                 handle_request('UserController', 'logout');
             } else {
                 header('Location: '.BASE_URL);
             }
             break;
         case 'register':
-            handle_request('UserController', 'register');
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                handle_request('UserController', 'register');
+            }
             break;
-        case 'update':
-            handle_request('UserProfileController', 'update');
+        case 'update-profile':
+            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'POST'){
+                handle_request('UserProfileController', 'update');
+            }
             break;
         case 'delete-account':
-            handle_request('UserProfileController', 'deleteAccount');
+            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'POST'){
+                handle_request('UserProfileController', 'deleteProfile');
+            }
             break;
         case 'user-profile':
-            if(isAuthenticated()){
+            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'GET'){
                 handle_request('UserProfileController', 'index');
             } else {
                 header('Location: '.BASE_URL);

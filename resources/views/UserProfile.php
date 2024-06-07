@@ -42,17 +42,19 @@ $user=$user->getUser();
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <?php echo ucfirst($_SESSION['user_nick']); ?>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/profile" aria-current="page"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/collection"><i class="fa fa-folder"></i>&nbsp;Mi Colección</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
-                        </ul>
-                    </li>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php echo ucfirst($_SESSION['user_nick']); ?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" aria-current="page" href="<?php ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="<?php VIEWS.'/collections/view_collection?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="<?php ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -133,8 +135,8 @@ $user=$user->getUser();
                     <!-- Botón para cancelar la eliminación -->
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <!-- Botón para confirmar la eliminación -->
-                    <form action="<?php echo ROOT; ?>user/delete-account" method="post">
-                        <input type="hidden" name="action" value="deleteAccount">
+                    <form action="<?php echo ROUTER; ?>" method="post">
+                        <input type="hidden" name="action" value="delete-account">
                         <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
                     </form>
                 </div>
@@ -145,59 +147,6 @@ $user=$user->getUser();
     <!-- Bootstrap Bundle with Popper -->
     <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        // Prevenir el envío del formulario si no se han realizado cambios
-        document.getElementById('profileForm').addEventListener('submit', function(event) {
-            if (document.getElementById('name').disabled && document.getElementById('nick').disabled && document.getElementById('dob').disabled && document.getElementById('email').disabled && document.getElementById('current_password').disabled && document.getElementById('new_password').disabled && document.getElementById('confirm_password').disabled) {
-                event.preventDefault();
-            }
-        });
-
-        // Anular el copiado de contraseñas y pegado en campos de contraseña
-        document.querySelectorAll('input[type="password"]').forEach(function(input) {
-            input.addEventListener('paste', function(event) {
-                event.preventDefault();
-                return false;
-            });
-            input.addEventListener('copy', function(event) {
-                event.preventDefault();
-                return false;
-            });
-        });
-
-        function editProfile() {
-            document.getElementById('name').disabled = false;
-            document.getElementById('name').setAttribute('aria-disabled', 'false');
-            document.getElementById('nick').disabled = false;
-            document.getElementById('nick').setAttribute('aria-disabled', 'false');
-            document.getElementById('dob').disabled = false;
-            document.getElementById('dob').setAttribute('aria-disabled', 'false');
-            document.getElementById('email').disabled = false;
-            document.getElementById('email').setAttribute('aria-disabled', 'false');
-            document.getElementById('current_password').disabled = false;
-            document.getElementById('new_password').disabled = false;
-            document.getElementById('confirm_password').disabled = false;
-            document.getElementById('editProfileBtn').style.display = 'none';
-            document.getElementById('saveChangesBtn').style.display = 'inline-block';
-            document.getElementById('cancelEditBtn').style.display = 'inline-block';
-        }
-
-        function cancelEdit() {
-            document.getElementById('name').disabled = true;
-            document.getElementById('name').setAttribute('aria-disabled', 'true');
-            document.getElementById('nick').disabled = true;
-            document.getElementById('nick').setAttribute('aria-disabled', 'true');
-            document.getElementById('dob').disabled = true;
-            document.getElementById('dob').setAttribute('aria-disabled', 'true');
-            document.getElementById('email').disabled = true;
-            document.getElementById('email').setAttribute('aria-disabled', 'true');
-            document.getElementById('current_password').disabled = true;
-            document.getElementById('new_password').disabled = true;
-            document.getElementById('confirm_password').disabled = true;
-            document.getElementById('editProfileBtn').style.display = 'inline-block';
-            document.getElementById('saveChangesBtn').style.display = 'none';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-    </script>
+    <script src="<?php echo JS; ?>/user-profile.js"></script>
 </body>
 </html>

@@ -57,6 +57,11 @@ create table coleccion_juegos(
     FOREIGN KEY (juego) REFERENCES juegos(id)
 );
 
+create table imagenes_galeria(
+    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    imagen varchar(255) NOT NULL,
+);
+
 SET GLOBAL log_bin_trust_function_creators = 1; 
 
 DELIMITER $$
