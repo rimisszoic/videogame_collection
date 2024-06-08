@@ -5,22 +5,20 @@ if (session_status() == PHP_SESSION_NONE) {
 
 include_once(MODELS . '/User.php');
 
-class UserProfile {
+class UserProfileController {
     private $user;
 
     public function __construct(){
-        $this->user = new User();
+        $this->user = User::getUser();
     }
 
     public function index(){
         if (isset($_SESSION['user_id'])) {
-            $user = $this->user->getUserObject();
-            require_once(VIEWS . '/UserProfile.php');
+            require_once(VIEWS.'UserProfile.php');
         } else {
             $this->redirectWithMessage('error', 'No tienes permisos para acceder a esta página.');
         }
     }
-
     public function updateProfile(){
         if (isset($_SESSION['user_id'])) {
             $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
@@ -52,7 +50,7 @@ class UserProfile {
                 }
             } else {
                 if ($result) {
-                    $this->redirectWithMessage('success', 'Perfil actualizado correctamente.');
+                    $this->redirectWithMessage('ok', 'Perfil actualizado correctamente.');
                 } else {
                     $this->redirectWithMessage('error', 'No se pudo actualizar el perfil.');
                 }
@@ -60,6 +58,11 @@ class UserProfile {
         }
     }
 
+    public function deleteProfile(){
+        if (isset($_SESSION['user_id'])) {
+            $this->user->deleteUser();
+        }
+    }
     private function redirectWithMessage($result, $message) {
         header('Location: ' . BASE_URL . '?result=' . $result . '&msg=' . urlencode($message));
         exit();

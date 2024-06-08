@@ -69,4 +69,14 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
+CREATE TRIGGER borrar_coleccion_usuario_borrado
+BEFORE DELETE ON usuarios
+FOR EACH ROW
+BEGIN
+    DELETE FROM colecciones WHERE usuario = OLD.id;
+END$$
+
+DELIMITER ;
+
 SET GLOBAL log_bin_trust_function_creators = 0; 

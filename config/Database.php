@@ -72,7 +72,7 @@ class Database
 
     /**
      * Método para obtener la última fila insertada en la base de datos
-     * @return string ID de la última fila insertada
+     * @return self ID de la última fila insertada
      * @throws Exception Si la consulta falla
      */
     public function returnConnection(){
@@ -81,17 +81,15 @@ class Database
 
     /**
      * Método para obtener la última fila insertada en la base de datos
-     * @return string ID de la última fila insertada
+     * @return int ID de la última fila insertada
      * @throws Exception Si la consulta falla
      */
-    public function lastInsertId(){
+    public function lastInsertId(): int{
         try {
             return $this->conn->lastInsertId();
         } catch (PDOException $e) {
             $this->handleError("Last insert ID failed: ".$e->getMessage());
             throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");
-        } finally {
-            $this->conn = null;
         }
     }
 
@@ -103,7 +101,8 @@ class Database
     private function handleError($message)
     {
         // Registrar el error en un archivo de logs
-        error_log("Database Error: " . $message.PHP_EOL, 3, $this->logFile);
+        $log="[".date('Y-m-d H:i:s')."] ".$message.PHP_EOL;
+        error_log($log, 3, $this->logFile);
 
         // Enviar un correo electrónico al administrador
         try{
@@ -111,7 +110,8 @@ class Database
             $template=$this->mailer->loadTemplate(RESOURCES.'templates/error_email.html', ['errorMessage'=>$message]);
             $this->mailer->sendMail($this->adminEmail, $subject, $template);
         } catch (Exception $e) {
-            error_log("Error sending email: ".$e->getMessage().PHP_EOL, 3, $this->logFile);
+            $log="[".date('Y-m-d H:i:s')."] Error sending email: ".$e->getMessage().PHP_EOL;
+            error_log($log, 3, $this->logFile);
         }
 
         throw new Exception("Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.");

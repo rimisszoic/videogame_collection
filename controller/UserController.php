@@ -38,7 +38,7 @@ class UserController {
     public function register()
     {
         // Verificar si la cookie de fecha de nacimiento está presente
-        $dobInvalidCookie=isseet($_COOKIE['blocked_dob']) ? true : false;
+        $dobInvalidCookie=isset($_COOKIE['blocked_dob']) ? true : false;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Validar y procesar datos de registro

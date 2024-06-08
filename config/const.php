@@ -13,7 +13,7 @@ define('CONFIG','config/');
 define('ROOT', $_SERVER['DOCUMENT_ROOT'] . '/videogame_collection/');
 define('LOGS', ROOT . 'logs/');
 define('RESOURCES', ROOT . 'resources/');
-define('ROUTER', 'router.php');
+define('ROUTER', '/videogame_collection/router.php');
 
 /* Constantes para la base de datos */
 define('DB_HOST','localhost');

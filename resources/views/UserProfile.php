@@ -97,13 +97,13 @@ $user=$user->getUser();
 
             <!-- Botones para editar y guardar cambios -->
             <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-primary" id="editProfileBtn" onclick="editProfile()">Editar Perfil</button>
+                <button type="button" class="btn btn-primary" id="editProfileBtn">Editar Perfil</button>
                 <div>
                     <button type="submit" id="saveChangesBtn" class="btn btn-success">Guardar Cambios</button>
-                    <button type="button" class="btn btn-secondary" style="display: none;" id="cancelEditBtn" onclick="cancelEdit()">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" style="display: none;" id="cancelEditBtn">Cancelar</button>
                 </div>
             </div>
-            <input type="hidden" name="action" value="updateProfile">
+            <input type="hidden" name="action" value="update-profile">
         </form>
     </div>
 
@@ -130,11 +130,10 @@ $user=$user->getUser();
                     Todos tus datos y colecciones serán eliminados de forma permanente.
                 </div>
                 <div class="modal-footer">
-                    <!-- Botón para cancelar la eliminación -->
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <!-- Botón para confirmar la eliminación -->
-                    <form action="<?php echo ROOT; ?>user/delete-account" method="post">
-                        <input type="hidden" name="action" value="deleteAccount">
+                    <form action="<?php echo ROUTER; ?>" method="post" class="d-flex justify-content-between w-100">
+                        <input type="hidden" name="action" value="delete-account">
+                        <button type="button" class="btn btn-success me-2" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
                     </form>
                 </div>
@@ -144,6 +143,9 @@ $user=$user->getUser();
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="<?php echo JS ?>notifications.js"></script>
+
 
     <script>
         // Prevenir el envío del formulario si no se han realizado cambios
@@ -153,17 +155,17 @@ $user=$user->getUser();
             }
         });
 
-        // Anular el copiado de contraseñas y pegado en campos de contraseña
-        document.querySelectorAll('input[type="password"]').forEach(function(input) {
-            input.addEventListener('paste', function(event) {
-                event.preventDefault();
-                return false;
-            });
-            input.addEventListener('copy', function(event) {
-                event.preventDefault();
-                return false;
-            });
-        });
+        // // Anular el copiado de contraseñas y pegado en campos de contraseña
+        // document.querySelectorAll('input[type="password"]').forEach(function(input) {
+        //     input.addEventListener('paste', function(event) {
+        //         event.preventDefault();
+        //         return false;
+        //     });
+        //     input.addEventListener('copy', function(event) {
+        //         event.preventDefault();
+        //         return false;
+        //     });
+        // });
 
         function editProfile() {
             document.getElementById('name').disabled = false;
@@ -175,8 +177,11 @@ $user=$user->getUser();
             document.getElementById('email').disabled = false;
             document.getElementById('email').setAttribute('aria-disabled', 'false');
             document.getElementById('current_password').disabled = false;
+            document.getElementById('current_password').setAttribute('aria-disabled', 'false');
             document.getElementById('new_password').disabled = false;
+            document.getElementById('new_password').setAttribute('aria-disabled', 'false');
             document.getElementById('confirm_password').disabled = false;
+            document.getElementById('confirm_password').setAttribute('aria-disabled', 'false');
             document.getElementById('editProfileBtn').style.display = 'none';
             document.getElementById('saveChangesBtn').style.display = 'inline-block';
             document.getElementById('cancelEditBtn').style.display = 'inline-block';
@@ -192,12 +197,32 @@ $user=$user->getUser();
             document.getElementById('email').disabled = true;
             document.getElementById('email').setAttribute('aria-disabled', 'true');
             document.getElementById('current_password').disabled = true;
+            document.getElementById('current_password').setAttribute('aria-disabled', 'true');
             document.getElementById('new_password').disabled = true;
+            document.getElementById('new_password').setAttribute('aria-disabled', 'true');
             document.getElementById('confirm_password').disabled = true;
+            document.getElementById('confirm_password').setAttribute('aria-disabled', 'true');
             document.getElementById('editProfileBtn').style.display = 'inline-block';
             document.getElementById('saveChangesBtn').style.display = 'none';
             document.getElementById('cancelEditBtn').style.display = 'none';
         }
+
+        document.getElementById('editProfileBtn').addEventListener('click', editProfile);
+
+        document.getElementById('saveChangesBtn').addEventListener('click', function() {
+            swal({
+                title: '¿Estás seguro?',
+                text: '¿Deseas guardar los cambios realizados en tu perfil?',
+                icon: 'warning',
+                buttons: ['Cancelar', 'Guardar Cambios'],
+                dangerMode: true
+            }).then((willSave) => {
+                if (willSave) {
+                    document.getElementById('profileForm').submit();
+                }
+            });
+        });
+        document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
     </script>
 </body>
 </html>

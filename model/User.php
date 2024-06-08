@@ -106,15 +106,14 @@ class User {
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->bindParam(':nick', $nick, PDO::PARAM_STR);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if($result->rowCount() > 0) {
+            if($stmt->rowCount() > 0) {
                 return false;
             } else {
                 if($password !== $confirmPassword){
                     header('Location: '.BASE_URL.'?result=error&msg='.urlencode('Las contraseñas no coinciden'));
                     return false;
                 } else {
-                    $this->setPassword(password_hash($password));
+                    $this->setPassword(password_hash($password, PASSWORD_DEFAULT));
                 }
 
                 // Verificar si el nombre comoleto contiene un espacio en blanco
@@ -297,7 +296,7 @@ class User {
      * @return array Usuarios
      */
     public static function getUsers(): array {
-        try{
+        try {
             $conn = new Connection();
             $conn->connect();
             $query = "SELECT * FROM usuarios";
@@ -317,8 +316,8 @@ class User {
             $conn->close();
             return $users;
         } catch (Exception $e) {
-            return array();
             header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+            return []; // Add a return statement here
         } finally {
             if($conn!==null){
                 $conn->close();
@@ -336,17 +335,18 @@ class User {
             $conn->connect();
             $query = "SELECT * FROM roles";
             $result = $conn->query($query);
-            if($result->num_rows > 0) {
+            if($result->rowCount() > 0) {
                 $roles = array();
                 while($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     $roles[] = $row;
                 }
+                return $roles;
             } else {
-                return array();
+                return [];
             }
         } catch (Exception $e) {
-            return array();
             header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+            return [];
         } finally {
             if($conn!==null){
                 $conn->close();
@@ -394,8 +394,8 @@ class User {
             $conn->close();
             return $role;
         } catch (Exception $e) {
-            return 0;
             header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+            return 0;
         } finally {
             if($conn!==null){
                 $conn->close();
@@ -422,8 +422,8 @@ class User {
             $conn->close();
             return $lastAccess;
         } catch (Exception $e) {
-            return "";
             header('Location: '.BASE_URL.'?result=error&msg='.urlencode($e->getMessage()));
+            return "";
         } finally {
             if($conn!==null){
                 $conn->close();
@@ -551,9 +551,9 @@ class User {
 
     /**
      * Método para obtener el último acceso del usuario.
-     * @return string Fecha y hora del último acceso en formato 'YYYY-MM-DD HH:MM:SS'.
+     * @return DateTime|null Fecha y hora del último acceso en formato 'YYYY-MM-DD HH:MM:SS'.
      */
-    public function getLocalLastAccess(): date {
+    public function getLocalLastAccess(): ?DateTime {
         return $this->lastAccess;
     }
 

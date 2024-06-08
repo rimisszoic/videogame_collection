@@ -3,25 +3,19 @@ if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
 
-require_once("Game.php");
-require_once("Gallery.php");
 require_once("Connection.php");
 
 class Collection
 {
-    private int $id;
-    private string $name;
+    private int $userId;
     private string $username;
     private array $games;
-    private ?Gallery $gallery;
 
-    public function __construct(int $id=0, string $name="", string $username="", array $games=[], ?Gallery $gallery=null)
+    public function __construct(int $userId=0, string $username="", array $games=[])
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->userId = $userId;
         $this->username = $username;
         $this->games = $games;
-        $this->gallery = $gallery;
     }
 
     public function getCollections()
@@ -29,11 +23,7 @@ class Collection
         try{
             $conn=new Connection();
             $conn=$conn->connect();
-            $stmt = $conn->prepare("SELECT c.id, c.nombre, u.username, c.galeria, c.juego, j.nombre, jp.plataforma, j.genero, j.fecha_lanzamiento, jp.portada 
-                                    FROM coleccion c 
-                                    JOIN juegos_plataformas jp ON c.juego=jp.id 
-                                    JOIN juegos j ON jp.juego=j.id 
-                                    JOIN usuarios u ON c.usuario=u.id");
+            $stmt = $conn->prepare("SELECT cj.colecion, cj.juego, j.nombre, j.plataforma, j.genero, ");
             $stmt->execute();
             $collections=$stmt->fetch(PDO::FETCH_ASSOC);
 
