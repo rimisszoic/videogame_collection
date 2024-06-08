@@ -9,15 +9,6 @@ class Collection
 {
     private int $userId;
     private string $username;
-<<<<<<< HEAD
-    private array $games;
-
-    public function __construct(int $userId=0, string $username="", array $games=[])
-    {
-        $this->userId = $userId;
-        $this->username = $username;
-        $this->games = $games;
-=======
     private array $collections;
     private int $numberOfGames;
 
@@ -27,17 +18,10 @@ class Collection
         $this->username = $username;
         $this->collections = $collections;
         $this->numberOfGames = $numberOfGames;
->>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
     }
 
     public function getCollections()
     {
-<<<<<<< HEAD
-        try{
-            $conn=new Connection();
-            $conn=$conn->connect();
-            $stmt = $conn->prepare("SELECT cj.colecion, cj.juego, j.nombre, j.plataforma, j.genero, ");
-=======
         try {
             $conn = new Connection();
             $conn = $conn->connect();
@@ -48,7 +32,6 @@ class Collection
                 JOIN coleccion_juegos cj ON c.id = cj.coleccion
                 GROUP BY c.id, c.usuario, u.nombre_usuario
             ");
->>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
             $stmt->execute();
             while($collectionData = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $collection = [
