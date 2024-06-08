@@ -50,29 +50,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
         case 'login':
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 handle_request('UserController', 'login');
-<<<<<<< HEAD
             } else {
                 header('Location: '.BASE_URL);
             }
         case 'logout':
             if($_SERVER['REQUEST_METHOD'] == 'GET' && isAuthenticated()){
-=======
-            }
-            break;
-        case 'logout':
-            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'GET'){
->>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
                 handle_request('UserController', 'logout');
-            } else {
-                header('Location: '.BASE_URL);
             }
             break;
         case 'register':
-<<<<<<< HEAD
             if($_SERVER['REQUEST_METHOD'] == 'POST' && !isAuthenticated()){
-                // handle_request('UserController', 'register');
-                $userController = new UserController();
-                $userController->register();
+                handle_request('UserController', 'register');
             } else {
                 header('Location: '.BASE_URL);
             }
@@ -94,8 +82,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
             break;
         case 'user-profile':
             if($_SERVER['REQUEST_METHOD'] == 'GET' && isAuthenticated()){
-=======
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 handle_request('UserController', 'register');
             }
             break;
@@ -111,7 +97,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
             break;
         case 'user-profile':
             if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'GET'){
->>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
                 handle_request('UserProfileController', 'index');
             } else {
                 header('Location: '.BASE_URL);
