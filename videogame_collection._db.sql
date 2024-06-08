@@ -57,6 +57,11 @@ create table coleccion_juegos(
     FOREIGN KEY (juego) REFERENCES juegos(id)
 );
 
+create table imagenes_galeria(
+    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    imagen varchar(255) NOT NULL,
+);
+
 SET GLOBAL log_bin_trust_function_creators = 1; 
 
 DELIMITER $$
@@ -74,6 +79,20 @@ CREATE TRIGGER borrar_coleccion_usuario_borrado
 BEFORE DELETE ON usuarios
 FOR EACH ROW
 BEGIN
+<<<<<<< HEAD
+=======
+    -- Obtener el id de la coleccion del usuario
+    DECLARE id_coleccion INT;
+
+    SELECT c.id
+    from coleccion_juegos cj join colecciones c on cj.coleccion = c.id
+    where c.usuario = OLD.id
+    INTO id_coleccion;
+
+    -- Borrar los juegos de la coleccion
+    DELETE FROM coleccion_juegos WHERE coleccion = id_coleccion;
+    -- Borrar la coleccion
+>>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
     DELETE FROM colecciones WHERE usuario = OLD.id;
 END$$
 

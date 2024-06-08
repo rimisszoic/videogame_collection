@@ -1,5 +1,3 @@
-<!-- En el archivo view_collection.php -->
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -24,16 +22,10 @@
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>">Inicio</a>
+                        <a class="nav-link active" aria-current="page" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?php echo ROOT; ?>collections">Colecciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>games">Juegos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>platforms">Plataformas</a>
+                        <a class="nav-link" href="<?php echo ROOT; ?>collections">Colecciones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contacto</a>
@@ -46,7 +38,7 @@
                                 <?php echo ucfirst($_SESSION['user_nick']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/user/profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="router.php?"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
                                 <li><a class="dropdown-item" href="/user/collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
@@ -61,7 +53,7 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -122,7 +114,57 @@
                         <div class="mb-3">
                             <label for="registerDob" class="form-label">Fecha de Nacimiento</label>
                             <input type="date" class="form-control" id="registerDob" name="dob" required aria-label="Fecha de nacimiento" max="<?php echo date('Y-m-d', strtotime('-14 years')); ?>">
-                            <div id="registerDobHelp" class="form-text"></div>
+                            <div id="registerDobbHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" required aria-label="Correo electrónico">
+                            <div id="registerEmailHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="registerPassword" name="registerPassword" required aria-label="Contraseña" onpaste="return false">
+                                <button class="btn btn-outline-secondary password-toggle-icon" type="button" id="registerPasswordToggle" aria-label="Mostrar contraseña">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength mb-3">
+                                <div class="strength-bar"></div>
+                                <div class="strength-text"></div>
+                            </div>
+                            <div class="pswd_info">
+                                <div class="notify error">La contraseña debe cumplir los siguientes requisitos:</div>
+                                <ul>
+                                    <li id="letter" class="invalid">Al menos <strong>una letra</strong></li>
+                                    <li id="capital" class="invalid">Al menos <strong>una letra mayúscula</strong></li>
+                                    <li id="number" class="invalid">Al menos <strong>un número</strong></li>
+                                    <li id="length" class="invalid">Al menos <strong>8 caracteres</strong></li>
+                                    <li id="match" class="invalid">Las contraseñas <strong>deben coincidir</strong></li>
+                                    <li id="blank" class="invalid">Las contraseñas <strong>no deben tener espacios</strong></li>
+                                </ul>
+                            </div>
+                            <div id="registerPasswordHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required aria-label="Confirmar contraseña" onpaste="return false">
+                                <button class="btn btn-outline-secondary password-toggle-icon" type="button" id="confirmPasswordToggle" aria-label="Mostrar contraseña">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div id="confirmPasswordHelp" class="form-text"></div>
+                        </div>
+                        <input type="hidden" name="action" value="register">
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>¿Ya tienes cuenta? <a href="#"
+Voy a completar el código HTML agregando el contenido del cuerpo de la página:
+
+```html
+                        DobbHelp" class="form-text"></div>
                         </div>
                         <div class="mb-3">
                             <label for="registerEmail" class="form-label">Correo electrónico</label>
@@ -175,48 +217,75 @@
         </div>
     </div>
 
-    <!-- Colección -->
-    <div class="container">
-        <h1 class="mt-5 mb-4">Colección</h1>
-        <!-- Verificación de si el usuario es propietario -->
-        <?php if ($isOwner): ?>
-            
-        <?php endif; ?>
+    <div class="container mt-3">
+        <form id="search-form" method="POST">
+            <input type="text" id="search-query" name="search_query" placeholder="Buscar juego...">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
 
-        <!-- Lista de juegos en la colección -->
-        <h2 class="mb-3">Juegos en la Colección</h2>
-        <?php if (!empty($games)): ?>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Título</th>
-                        <th scope="col">Plataforma</th>
-                        <th scope="col">Género</th>
-                        <th scope="col">Fecha de lanzamiento</th>
-                        <th scope="col">Portada</th>
-                        <th scope="col">Galería</th>
-                        <th scope="col">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($games as $index => $game): ?>
-                        <tr>
-                            <th scope="row"><?php echo $index + 1; ?></th>
-                            <td><?php echo $game['name']; ?></td>
-                            <td><?php echo $game['platform']; ?></td>
-                            <!-- Otras columnas si es necesario -->
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <div class="alert alert-warning" role="alert">
-                No hay juegos en esta colección.
-            </div>
-        <?php endif; ?>
+    <!-- Lista de juegos en la colección -->
+    <div class="container mt-3">
+        <h2 class="mb-3">Resultados de la Búsqueda</h2>
+        <div id="search-results"></div>
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
+    <script src="<?php echo BOOTSTRAP; ?>js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap Notify JavaScript -->
+    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="<?php echo JS; ?>notifications.js"></script>
+    <script src="<?php echo JS; ?>passwords.js"></script>
+
+    <!-- Script JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Script para manejar la búsqueda de juegos
+        $('#search-form').submit(function(event) {
+            event.preventDefault(); // Evita el envío del formulario por defecto
+            var formData = $(this).serialize(); // Serializa los datos del formulario
+            $.ajax({
+                type: 'POST',
+                url: 'search_game.php',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    // Limpia el contenedor de resultados de búsqueda
+                    $('#search-results').empty();
+                    if (response.error) {
+                        // Si hay un error, muestra el mensaje de error
+                        $('#search-results').append('<div class="alert alert-danger" role="alert">' + response.error + '</div>');
+                    } else {
+                        // Muestra los juegos encontrados
+                        $.each(response, function(index, game) {
+                            $('#search-results').append(
+                                '<div class="card">' +
+                                    '<div class="card-header">' + game.title + '</div>' +
+                                    '<div class="card-body">' +
+                                        '<h5 class="card-title">Plataforma: ' + game.platform + '</h5>' +
+                                        '<p class="card-text">Género: ' + game.genre + '</p>' +
+                                        '<p class="card-text">Fecha de lanzamiento: ' + game.release_date + '</p>' +
+                                        '<img src="' + game.cover + '" class="img-fluid" alt="Portada">' +
+                                        // Mostrar la galería de imágenes si está disponible
+                                        (game.gallery.length > 0 ?
+                                            '<div class="gallery">' +
+                                                game.gallery.map(function(image) {
+                                                    return '<img src="' + image + '" class="img-fluid" alt="Imagen de galería">';
+                                                }).join('') +
+                                            '</div>' : '') +
+                                    '</div>' +
+                                '</div>'
+                            );
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -9,6 +9,7 @@ class Collection
 {
     private int $userId;
     private string $username;
+<<<<<<< HEAD
     private array $games;
 
     public function __construct(int $userId=0, string $username="", array $games=[])
@@ -16,161 +17,85 @@ class Collection
         $this->userId = $userId;
         $this->username = $username;
         $this->games = $games;
+=======
+    private array $collections;
+    private int $numberOfGames;
+
+    public function __construct(int $userId=0, string $username="", array $collections=[], int $numberOfGames=0)
+    {
+        $this->userId = $userId;
+        $this->username = $username;
+        $this->collections = $collections;
+        $this->numberOfGames = $numberOfGames;
+>>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
     }
 
     public function getCollections()
     {
+<<<<<<< HEAD
         try{
             $conn=new Connection();
             $conn=$conn->connect();
             $stmt = $conn->prepare("SELECT cj.colecion, cj.juego, j.nombre, j.plataforma, j.genero, ");
+=======
+        try {
+            $conn = new Connection();
+            $conn = $conn->connect();
+            $stmt = $conn->prepare("
+                SELECT c.id, c.usuario, u.nombre_usuario, count(cj.juego) as numero_juegos
+                FROM colecciones c
+                JOIN usuarios u ON c.usuario = u.id
+                JOIN coleccion_juegos cj ON c.id = cj.coleccion
+                GROUP BY c.id, c.usuario, u.nombre_usuario
+            ");
+>>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
             $stmt->execute();
-            $collections=$stmt->fetch(PDO::FETCH_ASSOC);
-
-            $this->games = [];
-            foreach ($collections as $collection) {
-                $this->id = $collection['id'];
-                $this->name = $collection['nombre'];
-                
-                $game=new Game($collection['juego'], $collection['nombre'], $collection['plataforma'], $collection['genero'], $collection['fecha_lanzamiento'], $collection['portada']);
-                $this->addCollection($game);
+            while($collectionData = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $collection = [
+                    'id' => $collectionData['id_usuario'],
+                    'userId' => $collectionData['usuario'],
+                    'username' => $collectionData['nombre_usuario'],
+                    'numberOfGames' => $collectionData['numero_juegos']
+                ];
+                $this->collections[] = $collection;
             }
-
-            // Si la galería está definida en la base de datos, la creamos
-            if($collections['galeria'] != null){
-                $this->gallery = new Gallery($collections['galeria']);
-                $this->gallery->getPictures();
-            } else {
-                $this->gallery = null;
-            }
-        } catch (Exception $e){
-            header('Location: '.ROOT.'/collections?result=error&msg='.$e->getMessage());
-        } finally{
-            if($conn!=null){
+        } catch (Exception $e) {
+            header('Location: /videogame_collection/collections?result=error&msg=' . $e->getMessage());
+        } finally {
+            if ($conn != null) {
                 $conn->close();
             }
         }
     }
 
-    public function getUserCollection(){
-        try{
-            $conn=new Connection();
-            $conn=$conn->connect();
-            $stmt = $conn->prepare("SELECT c.id, u.username, c.galeria, c.juego, j.nombre, jp.plataforma, j.genero, j.fecha_lanzamiento, jp.portada FROM coleccion c JOIN juegos_plataformas jp ON c.juego=jp.id JOIN juegos j ON jp.juego=j.id JOIN usuarios u ON c.usuario=u.id WHERE c.usuario=:user_id");
-            $stmt->bindParam(':user_id', $_SESSION['user_id']);
-            $stmt->execute();
-            $collections=$stmt->fetch(PDO::FETCH_ASSOC);
-
-            $this->games = [];
-            foreach ($collections as $collection) {
-                $game=new Game($collection['juego'], $collection['nombre'], $collection['plataforma'], $collection['genero'], $collection['fecha_lanzamiento'], $collection['portada']);
-                $this->addGame($game);
-            }
-
-            // Si la galería está definida en la base de datos, la creamos
-            if($collections['galeria'] != null){
-                $this->gallery = new Gallery($collections['galeria']);
-                $this->gallery->getPictures();
-            } else {
-                $this->gallery = null;
-            }
-        } catch (Exception $e){
-            header('Location: '.ROOT.'/collections?result=error&msg='.$e->getMessage());
-        } finally{
-            if($conn!=null){
-                $conn->close();
-            }
-        }
-    }
-
-    public function getCollection($id)
+    public function renderCollections()
     {
-        try{
-            $conn=new Connection();
-            $conn=$conn->connect();
-            $stmt = $conn->prepare("SELECT c.id, u.username, c.galeria, c.juego, j.nombre, jp.plataforma, j.genero, j.fecha_lanzamiento, jp.portada FROM coleccion c JOIN juegos_plataformas jp ON c.juego=jp.id JOIN juegos j ON jp.juego=j.id JOIN usuarios u ON c.usuario=u.id WHERE c.id=:collection_id");
-            $stmt->bindParam(':collection_id', $id);
-            $stmt->execute();
-            $collection=$stmt->fetch(PDO::FETCH_ASSOC);
-
-            $this->games = [];
-            foreach ($collection as $game) {
-                $game=new Game($game['juego'], $game['nombre'], $game['plataforma'], $game['genero'], $game['fecha_lanzamiento'], $game['portada']);
-                $this->addGame($game);
+        if (empty($this->collections)) {
+            echo '
+            <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+                <div class="card text-center" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Sin Colecciones</h5>
+                        <p class="card-text">No hay colecciones disponibles en este momento. ¡Crea una nueva colección para empezar a añadir juegos!</p>
+                    </div>
+                </div>
+            </div>';
+        } else {
+            echo '<div class="row row-cols-1 row-cols-md-3 g-4">';
+            foreach ($this->collections as $collection) {
+                echo '<div class="col">';
+                echo '<div class="card h-100">';
+                // Cambia la URL por la ruta de tu imagen de fondo
+                echo '<div class="card-img-top" style="background-image: url(\'ruta_de_la_imagen\'); height: 200px; background-size: cover;"></div>';
+                echo '<div class="card-body">';
+                echo '<h5 class="card-title">' . $collection['username'] . '</h5>';
+                echo '<p class="card-text">Número de juegos: ' . $collection['numberOfGames'] . '</p>';
+                echo '<a href="view_collection.php?user=' . $collection['id_usario'] . '" class="btn btn-primary">Ver Colección</a>';
+                echo '</div>'; // Fin de card-body
+                echo '</div>'; // Fin de card
+                echo '</div>'; // Fin de col
             }
-
-            // Si la galería está definida en la base de datos, la creamos
-            if($collection['galeria'] != null){
-                $this->gallery = new Gallery($collection['galeria']);
-                $this->gallery->getPictures();
-            } else {
-                $this->gallery = null;
-            }
-        } catch (Exception $e){
-            header('Location: '.ROOT.'/collections?result=error&msg='.$e->getMessage());
-        } finally{
-            if($conn!=null){
-                $conn->close();
-            }
-        }
-    }
-
-    public function addGame($game)
-    {
-        $this->games[] = $game;
-    }
-
-    public function deleteGame($id)
-    {
-        $found = false;
-        $this->games = array_filter($this->games, function($game) use ($id, &$found){
-            if($game->getId() == $id && !$found){
-                $game->deleteGame($id);
-                $found = true;
-                return false;
-            }
-            return true;
-        });
-    }
-
-    public function deleteCollection($id)
-    {
-        unset($this->games[$id]);
-    }
-
-    public function filterGames($platform, $genre)
-    {
-        $filteredGames = [];
-        foreach ($this->games as $game) {
-            if ($game->getPlatform() == $platform && $game->getGenre() == $genre) {
-                $filteredGames[] = $game;
-            }
-        }
-        return $filteredGames;
-    }
-
-    public function exportList(){
-        if(this->games > 0){
-            $delimiter=",";
-            $filename="collection".date('Y-m-d').".csv";
-
-            // Creamos un puntero de archivo
-            $f = fopen('php://output', 'wb');
-
-            // Establecemos los nombres de encabezado de las columnas
-            $header = array("ID", "Nombre", "Plataforma", "Género", "Fecha de lanzamiento", "Portada");
-            fputcsv($f, $header, $delimiter);
-
-            // Escribimos los datos de cada juego en  el archivo CSV
-            foreach ($this->games as $game) {
-                $lineData = array($game->getId(), $game->getName(), $game->getPlatform(), $game->getGenre(), $game->getReleaseDate(), $game->getCover());
-                fputcsv($f, $lineData, $delimiter);
-            }
-
-            // Descargar el archivo CSV
-            header('Content-Type: text/csv');
-            header('Content-Disposition: attachment; filename="'.$filename.'";');
-            exit();
+            echo '</div>'; // Fin de row
         }
     }
 }

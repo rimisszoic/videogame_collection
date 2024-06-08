@@ -34,9 +34,6 @@ require_once('config/const.php');
                         <a class="nav-link" href="<?php echo ROOT; ?>collections">Colecciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>platforms">Plataformas</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#">Contacto</a>
                     </li>
                 </ul>

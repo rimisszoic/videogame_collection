@@ -2,6 +2,7 @@
 if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
+
 require_once('config/const.php');
 require_once(CONTROLLERS . 'UserController.php');
 require_once(CONTROLLERS . 'UserProfileController.php');
@@ -49,17 +50,25 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
         case 'login':
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 handle_request('UserController', 'login');
+<<<<<<< HEAD
             } else {
                 header('Location: '.BASE_URL);
             }
         case 'logout':
             if($_SERVER['REQUEST_METHOD'] == 'GET' && isAuthenticated()){
+=======
+            }
+            break;
+        case 'logout':
+            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'GET'){
+>>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
                 handle_request('UserController', 'logout');
             } else {
                 header('Location: '.BASE_URL);
             }
             break;
         case 'register':
+<<<<<<< HEAD
             if($_SERVER['REQUEST_METHOD'] == 'POST' && !isAuthenticated()){
                 // handle_request('UserController', 'register');
                 $userController = new UserController();
@@ -85,6 +94,24 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
             break;
         case 'user-profile':
             if($_SERVER['REQUEST_METHOD'] == 'GET' && isAuthenticated()){
+=======
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                handle_request('UserController', 'register');
+            }
+            break;
+        case 'update-profile':
+            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'POST'){
+                handle_request('UserProfileController', 'update');
+            }
+            break;
+        case 'delete-account':
+            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'POST'){
+                handle_request('UserProfileController', 'deleteProfile');
+            }
+            break;
+        case 'user-profile':
+            if(isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'GET'){
+>>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
                 handle_request('UserProfileController', 'index');
             } else {
                 header('Location: '.BASE_URL);

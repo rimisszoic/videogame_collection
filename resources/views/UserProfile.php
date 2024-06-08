@@ -42,17 +42,19 @@ $user=$user->getUser();
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <?php echo ucfirst($_SESSION['user_nick']); ?>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/profile" aria-current="page"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/collection"><i class="fa fa-folder"></i>&nbsp;Mi Colección</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="<?php echo ROOT; ?>user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
-                        </ul>
-                    </li>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php echo ucfirst($_SESSION['user_nick']); ?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" aria-current="page" href="<?php ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="<?php VIEWS.'/collections/view_collection?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="<?php ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -131,9 +133,14 @@ $user=$user->getUser();
                 </div>
                 <div class="modal-footer">
                     <!-- Botón para confirmar la eliminación -->
+<<<<<<< HEAD
                     <form action="<?php echo ROUTER; ?>" method="post" class="d-flex justify-content-between w-100">
                         <input type="hidden" name="action" value="delete-account">
                         <button type="button" class="btn btn-success me-2" data-bs-dismiss="modal">Cancelar</button>
+=======
+                    <form action="<?php echo ROUTER; ?>" method="post">
+                        <input type="hidden" name="action" value="delete-account">
+>>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
                         <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
                     </form>
                 </div>
@@ -147,6 +154,7 @@ $user=$user->getUser();
     <script src="<?php echo JS ?>notifications.js"></script>
 
 
+<<<<<<< HEAD
     <script>
         // Prevenir el envío del formulario si no se han realizado cambios
         document.getElementById('profileForm').addEventListener('submit', function(event) {
@@ -224,5 +232,8 @@ $user=$user->getUser();
         });
         document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
     </script>
+=======
+    <script src="<?php echo JS; ?>/user-profile.js"></script>
+>>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
 </body>
 </html>

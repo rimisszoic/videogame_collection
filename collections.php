@@ -1,3 +1,14 @@
+<?php
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
+
+require_once('config/const.php');
+require_once(MODELS . 'Collection.php');
+
+$collectionModel = new Collection();
+$collectionModel->getCollections();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,13 +39,7 @@
                         <a class="nav-link" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?php echo ROOT; ?>collections">Colecciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>games">Juegos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>platforms">Plataformas</a>
+                        <a class="nav-link active" aria-current="page" href="/videogame_collection/collections">Colecciones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contacto</a>
@@ -47,10 +52,10 @@
                                 <?php echo ucfirst($_SESSION['user_nick']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/user/profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                                <li><a class="dropdown-item" href="/user/collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                                <li><a class="dropdown-item" href="<?php echo ROUTER; ?>action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="<?php echo VIEWS.'/collections/view_collection.php?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                                <li><a class="dropdown-item" href="<?php ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
@@ -72,7 +77,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/login" method="post">
+                    <form action="<?php echo ROUTER; ?>" method="post">
                         <div class="mb-3">
                             <label for="loginNick" class="form-label">Nick</label>
                             <input type="text" class="form-control" id="loginNick" name="nick" required aria-label="Nombre de usuario">
@@ -109,7 +114,7 @@
                 </div>
                 <div class="modal-body">
                     <?php $dobInvalidCookie=isset($_COOKIE['dob_invalid']) ? true : false; ?>
-                    <form action="/register" method="post" <?php if ($dobInvalidCookie) echo 'onsubmit="return false"'; ?>>
+                    <form action="<?php echo ROUTER; ?>" method="post" <?php if ($dobInvalidCookie) echo 'onsubmit="return false"'; ?>>
                         <div class="mb-3">
                             <label for="registerName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="registerName" name="name" required aria-label="Nombre">
@@ -177,21 +182,9 @@
     </div>
 
     <!-- Collections -->
-    <div class="container">
-        <h1 class="mt-5 mb-4">Todas las colecciones</h1>
-        <div class="row justify-content-between">
-            <?php foreach ($collections as $collection): ?>
-                <div class="col-md-4">
-                    <div class="card mb-4 collection-card">
-                        <img src="<?php echo ROOT; ?>images/collection_placeholder.jpg" class="card-img-top" alt="Colección de <?php echo $collection['username']; ?>">
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo $collection['username']; ?></h5>
-                            <a href="view_collection.php?id=<?php echo $userId; ?>" class="btn btn-primary">Ver colección</a>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+    <div class="container mt-4">
+        <h1 class="text-center">Colecciones</h1>
+        <?php $collectionModel->renderCollections(); ?>
     </div>
 </body>
 </html>
