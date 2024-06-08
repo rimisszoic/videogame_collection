@@ -150,7 +150,8 @@ class ViewCollectionController
         }
     }
 
-    public function addGameToCollection()
+    public function addGameToCollection(){
+    }
 }
 
 ?>
