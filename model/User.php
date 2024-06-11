@@ -3,6 +3,7 @@ if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
 require_once(MODELS.'Connection.php');
+require_once(MODELS.'Mailer.php');
 
 /**
  * Clase User
@@ -153,6 +154,11 @@ class User {
                     $_SESSION['user_role'] = $this->getLocalRole();
                     $_SESSION['user_nick'] = $this->getNickName();
                     $conn->close();
+                    // Enviar correo electrónico de bienvenida
+                    $mailer = new Mailer();
+                    $template=$mailer->loadTemplate(RESOURCES.'templates/welcome_email.html',['username'=>$nick]);
+                    $mailer->sendMail($email, 'Bienvenido a la plataforma', $template);
+                    
                     header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha registrado correctamente'));
                     return true;
                 } else {

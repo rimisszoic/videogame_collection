@@ -132,15 +132,11 @@ $user=$user->getUser();
                     Todos tus datos y colecciones serán eliminados de forma permanente.
                 </div>
                 <div class="modal-footer">
+                    <!-- Botón para cancelar la eliminación -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <!-- Botón para confirmar la eliminación -->
-<<<<<<< HEAD
-                    <form action="<?php echo ROUTER; ?>" method="post" class="d-flex justify-content-between w-100">
-                        <input type="hidden" name="action" value="delete-account">
-                        <button type="button" class="btn btn-success me-2" data-bs-dismiss="modal">Cancelar</button>
-=======
                     <form action="<?php echo ROUTER; ?>" method="post">
                         <input type="hidden" name="action" value="delete-account">
->>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
                         <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
                     </form>
                 </div>
@@ -154,86 +150,6 @@ $user=$user->getUser();
     <script src="<?php echo JS ?>notifications.js"></script>
 
 
-<<<<<<< HEAD
-    <script>
-        // Prevenir el envío del formulario si no se han realizado cambios
-        document.getElementById('profileForm').addEventListener('submit', function(event) {
-            if (document.getElementById('name').disabled && document.getElementById('nick').disabled && document.getElementById('dob').disabled && document.getElementById('email').disabled && document.getElementById('current_password').disabled && document.getElementById('new_password').disabled && document.getElementById('confirm_password').disabled) {
-                event.preventDefault();
-            }
-        });
-
-        // // Anular el copiado de contraseñas y pegado en campos de contraseña
-        // document.querySelectorAll('input[type="password"]').forEach(function(input) {
-        //     input.addEventListener('paste', function(event) {
-        //         event.preventDefault();
-        //         return false;
-        //     });
-        //     input.addEventListener('copy', function(event) {
-        //         event.preventDefault();
-        //         return false;
-        //     });
-        // });
-
-        function editProfile() {
-            document.getElementById('name').disabled = false;
-            document.getElementById('name').setAttribute('aria-disabled', 'false');
-            document.getElementById('nick').disabled = false;
-            document.getElementById('nick').setAttribute('aria-disabled', 'false');
-            document.getElementById('dob').disabled = false;
-            document.getElementById('dob').setAttribute('aria-disabled', 'false');
-            document.getElementById('email').disabled = false;
-            document.getElementById('email').setAttribute('aria-disabled', 'false');
-            document.getElementById('current_password').disabled = false;
-            document.getElementById('current_password').setAttribute('aria-disabled', 'false');
-            document.getElementById('new_password').disabled = false;
-            document.getElementById('new_password').setAttribute('aria-disabled', 'false');
-            document.getElementById('confirm_password').disabled = false;
-            document.getElementById('confirm_password').setAttribute('aria-disabled', 'false');
-            document.getElementById('editProfileBtn').style.display = 'none';
-            document.getElementById('saveChangesBtn').style.display = 'inline-block';
-            document.getElementById('cancelEditBtn').style.display = 'inline-block';
-        }
-
-        function cancelEdit() {
-            document.getElementById('name').disabled = true;
-            document.getElementById('name').setAttribute('aria-disabled', 'true');
-            document.getElementById('nick').disabled = true;
-            document.getElementById('nick').setAttribute('aria-disabled', 'true');
-            document.getElementById('dob').disabled = true;
-            document.getElementById('dob').setAttribute('aria-disabled', 'true');
-            document.getElementById('email').disabled = true;
-            document.getElementById('email').setAttribute('aria-disabled', 'true');
-            document.getElementById('current_password').disabled = true;
-            document.getElementById('current_password').setAttribute('aria-disabled', 'true');
-            document.getElementById('new_password').disabled = true;
-            document.getElementById('new_password').setAttribute('aria-disabled', 'true');
-            document.getElementById('confirm_password').disabled = true;
-            document.getElementById('confirm_password').setAttribute('aria-disabled', 'true');
-            document.getElementById('editProfileBtn').style.display = 'inline-block';
-            document.getElementById('saveChangesBtn').style.display = 'none';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-
-        document.getElementById('editProfileBtn').addEventListener('click', editProfile);
-
-        document.getElementById('saveChangesBtn').addEventListener('click', function() {
-            swal({
-                title: '¿Estás seguro?',
-                text: '¿Deseas guardar los cambios realizados en tu perfil?',
-                icon: 'warning',
-                buttons: ['Cancelar', 'Guardar Cambios'],
-                dangerMode: true
-            }).then((willSave) => {
-                if (willSave) {
-                    document.getElementById('profileForm').submit();
-                }
-            });
-        });
-        document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
-    </script>
-=======
     <script src="<?php echo JS; ?>/user-profile.js"></script>
->>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
 </body>
 </html>

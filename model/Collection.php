@@ -2,9 +2,6 @@
 if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
-
-require_once("Connection.php");
-
 class Collection
 {
     private int $userId;
@@ -22,20 +19,22 @@ class Collection
 
     public function getCollections()
     {
+        require_once(dirname(__DIR__).'/config/const.php');
+        require_once(MODELS."Connection.php");
+    
         try {
             $conn = new Connection();
-            $conn = $conn->connect();
+            $conn->connect();
             $stmt = $conn->prepare("
-                SELECT c.id, c.usuario, u.nombre_usuario, count(cj.juego) as numero_juegos
+                SELECT c.id, c.usuario, u.nombre_usuario, COUNT(cj.juego) AS numero_juegos
                 FROM colecciones c
                 JOIN usuarios u ON c.usuario = u.id
-                JOIN coleccion_juegos cj ON c.id = cj.coleccion
+                LEFT JOIN coleccion_juegos cj ON c.id = cj.coleccion
                 GROUP BY c.id, c.usuario, u.nombre_usuario
             ");
             $stmt->execute();
             while($collectionData = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $collection = [
-                    'id' => $collectionData['id_usuario'],
                     'userId' => $collectionData['usuario'],
                     'username' => $collectionData['nombre_usuario'],
                     'numberOfGames' => $collectionData['numero_juegos']
@@ -43,7 +42,7 @@ class Collection
                 $this->collections[] = $collection;
             }
         } catch (Exception $e) {
-            header('Location: /videogame_collection/collections?result=error&msg=' . $e->getMessage());
+            header('Location: /videogame_collection/collections.php?result=error&msg=' . $e->getMessage());
         } finally {
             if ($conn != null) {
                 $conn->close();
@@ -73,7 +72,8 @@ class Collection
                 echo '<div class="card-body">';
                 echo '<h5 class="card-title">' . $collection['username'] . '</h5>';
                 echo '<p class="card-text">Número de juegos: ' . $collection['numberOfGames'] . '</p>';
-                echo '<a href="view_collection.php?user=' . $collection['id_usario'] . '" class="btn btn-primary">Ver Colección</a>';
+                $collectionRoute=VIEWS.'collections/view_collection.php?user=' . $collection['userId'];
+                echo '<a href="'.$collectionRoute.'" class="btn btn-primary">Ver Colección</a>';
                 echo '</div>'; // Fin de card-body
                 echo '</div>'; // Fin de card
                 echo '</div>'; // Fin de col

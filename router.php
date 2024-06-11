@@ -60,7 +60,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
             break;
         case 'register':
             if($_SERVER['REQUEST_METHOD'] == 'POST' && !isAuthenticated()){
-                handle_request('UserController', 'register');
+                // handle_request('UserController', 'register');
+                $userController = new UserController();
+                $userController->register();
             } else {
                 header('Location: '.BASE_URL);
             }

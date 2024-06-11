@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenido a nuestra aplicación</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Copia el contenido de bootstrap.min.css aquí */
-        /* Puedes obtener bootstrap.min.css de https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css */
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
@@ -24,22 +24,24 @@
             padding: 10px;
             border-radius: 5px;
             text-align: center;
+            margin-bottom: 20px;
         }
         .welcome-body {
             background-color: #fefefe;
-            padding: 10px;
+            padding: 20px;
             border-radius: 5px;
-            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="welcome-header">
-            <h1>Bienvenido, {{ username }}</h1>
+            <h1 class="display-4">¡Bienvenido, {{ username }}!</h1>
         </div>
         <div class="welcome-body">
-            <p>Estamos encantados de que te hayas unido a nosotros.</p>
+            <p class="lead">Estamos encantados de que te hayas unido a nosotros.</p>
+            <p>Gracias por registrarte en nuestra aplicación. Esperamos que disfrutes de todas las características que ofrecemos.</p>
+            <p>No dudes en contactarnos si necesitas ayuda o tienes alguna pregunta.</p>
         </div>
     </div>
 </body>

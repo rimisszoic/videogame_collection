@@ -5,6 +5,7 @@ if(session_status() == PHP_SESSION_NONE){
 
 require_once('config/const.php');
 require_once(MODELS . 'Collection.php');
+require_once(MODELS . 'Connection.php');
 
 $collectionModel = new Collection();
 $collectionModel->getCollections();

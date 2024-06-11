@@ -1,4 +1,5 @@
 <?php
+require_once(dirname(__DIR__).'/config/const.php');
 require_once(CONFIG.'Database.php');
 
 // Clase para manejar la conexión con la base de datos específicamente

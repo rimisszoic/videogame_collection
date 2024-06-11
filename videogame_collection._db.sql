@@ -15,7 +15,7 @@ create table usuarios(
     nombre_usuario varchar(30) not null,
     email varchar(255) not null,
     fecha_nacimiento date not null,
-    ultimo_acceso DATETIME not null,
+    ultimo_acceso DATETIME not null DEFAULT CURRENT_TIMESTAMP,
     password varchar(255) not null,
     rol int not null,
     PRIMARY KEY (id),
@@ -39,6 +39,7 @@ create table juegos(
     genero int NOT NULL,
     plataforma int NOT NULL,
     portada varchar(255) not null,
+    fecha_lanzamiento date not null,
     FOREIGN KEY (genero) REFERENCES generos(id),
     FOREIGN KEY (plataforma) REFERENCES plataformas(id)
 );
@@ -55,11 +56,6 @@ create table coleccion_juegos(
     PRIMARY KEY (coleccion, juego),
     FOREIGN KEY (coleccion) REFERENCES colecciones(id),
     FOREIGN KEY (juego) REFERENCES juegos(id)
-);
-
-create table imagenes_galeria(
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    imagen varchar(255) NOT NULL,
 );
 
 SET GLOBAL log_bin_trust_function_creators = 1; 
@@ -79,8 +75,6 @@ CREATE TRIGGER borrar_coleccion_usuario_borrado
 BEFORE DELETE ON usuarios
 FOR EACH ROW
 BEGIN
-<<<<<<< HEAD
-=======
     -- Obtener el id de la coleccion del usuario
     DECLARE id_coleccion INT;
 
@@ -92,10 +86,15 @@ BEGIN
     -- Borrar los juegos de la coleccion
     DELETE FROM coleccion_juegos WHERE coleccion = id_coleccion;
     -- Borrar la coleccion
->>>>>>> aed674e701dca1fe8b4cb1fa9fac086f377c54dd
     DELETE FROM colecciones WHERE usuario = OLD.id;
 END$$
 
 DELIMITER ;
 
 SET GLOBAL log_bin_trust_function_creators = 0; 
+
+-- Insertar datos
+
+insert into plataformas (nombre) values ('PC'), ('PS4'), ('Xbox One'), ('Nintendo Switch'), ('PS5'), ('Xbox Series X'), ('PS3'), ('Xbox 360'), ('Wii'), ('Wii U'), ('Nintendo 3DS'), ('Nintendo DS'), ('PS Vita'), ('PSP');
+
+insert into generos (nombre) values ('Acción'), ('Aventura'), ('Estrategia'), ('Deportes'), ('Simulación'), ('Rol'), ('Puzzle'), ('Carreras'), ('Plataformas'), ('Shooter'), ('Lucha'), ('Musical'), ('Survival Horror'), ('MMORPG'), ('Indie'), ('Otros');

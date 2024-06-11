@@ -31,7 +31,7 @@ require_once('config/const.php');
                         <a class="nav-link active" aria-current="page" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>collections">Colecciones</a>
+                        <a class="nav-link" href="collections.php">Colecciones</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contacto</a>

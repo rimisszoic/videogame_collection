@@ -64,7 +64,7 @@ class UserProfileController {
         }
     }
     private function redirectWithMessage($result, $message) {
-        header('Location: ' . BASE_URL . '?result=' . $result . '&msg=' . urlencode($message));
+        header('Location: ' . ROUTER . '?action=user-profile&result=' . $result . '&msg=' . urlencode($message));
         exit();
     }
 }

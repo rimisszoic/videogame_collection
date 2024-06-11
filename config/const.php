@@ -7,7 +7,6 @@ define('VIEWS', 'resources/views/');
 define('CONTROLLERS','controller/');
 define('CSS','resources/css/');
 define('JS','resources/js/');
-define('IMG','resources/images/');
 define('BOOTSTRAP','resources/bootstrap/');
 define('CONFIG','config/');
 define('ROOT', $_SERVER['DOCUMENT_ROOT'] . '/videogame_collection/');
