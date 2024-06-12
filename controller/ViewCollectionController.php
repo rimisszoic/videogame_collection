@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__DIR__) . '/config/const.php');
-require_once(MODELS. 'Connection.php');
+require_once(dirname(__DIR__).'/model/Connection.php');
+
 class ViewCollectionController {
     private $conn;
 
@@ -48,7 +49,9 @@ class ViewCollectionController {
 
             // Verificar si la colección está vacía
             if (empty($games)) {
+                echo "<div class='container mt-3'>";
                 echo "<div class='alert alert-info' role='alert'>La colección está vacía. ¡Agrega juegos para empezar!</div>";
+                echo "</div>";
                 return;
             }
 

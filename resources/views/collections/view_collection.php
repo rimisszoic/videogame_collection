@@ -6,6 +6,7 @@ require_once(dirname(__DIR__,3).'/config/const.php');
 require_once(dirname(__DIR__,3).'/controller/ViewCollectionController.php');
 require_once(dirname(__DIR__,3).'/model/Collection.php');
 $collectionController = new ViewCollectionController();
+$_SESSION['user_collection_id']=$_GET['user'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -37,7 +38,7 @@ $collectionController = new ViewCollectionController();
                         <a class="nav-link" href="/videogame_collection/collections.php">Colecciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
+                        <a class="nav-link" href="../contact.php">Contacto</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -50,7 +51,7 @@ $collectionController = new ViewCollectionController();
                                 <li><a class="dropdown-item" aria-current="page" href="<?php ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
                                 <li><a class="dropdown-item" href="<?php VIEWS.'/collections/view_collection?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?php ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                                <li><a class="dropdown-item" href="../../../router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
@@ -185,14 +186,14 @@ $collectionController = new ViewCollectionController();
     </div>
 
     <!-- Lista de juegos en la colección -->
-    <div class="container mt-3" id="search-results-container" style="display: none;">
+    <div class="container mt-3 mb-3" id="search-results-container" style="display: none;">
         <h2 class="mb-3">Resultados de la Búsqueda</h2>
         <div id="search-results"></div>
     </div>
 
     <!-- Formulario para registrar un juego -->
     <?php if($_GET['user'] == $_SESSION['user_id']): ?>
-    <div class="container mt-4" id="register-game-form-container">
+    <div class="container mt-3" id="register-game-form-container" style="display: none;">
         <h2 class="mb-3">Registrar Nuevo Juego</h2>
         <form id="register-game-form" method="POST" enctype="multipart/form-data" action="../../../controller/register_game.php">
             <div class="mb-3">
@@ -254,7 +255,6 @@ $collectionController = new ViewCollectionController();
     // Cargar los juegos de la colección
     $collectionController = new ViewCollectionController();
     $collectionController->getGames();
-    $_SESSION['user_collection_id']=$_GET['user'];
     ?>
 
     <!-- Bootstrap y scripts -->
@@ -295,7 +295,7 @@ $collectionController = new ViewCollectionController();
                                         '<p class="card-text">Fecha de lanzamiento: ' + game.fecha_lanzamiento+ '</p>' +
                                         '<img src="' + game.portada + '" class="img-fluid cover-image" alt="Portada">' +
                                         '<br>'+
-                                        '<a href="../../../controller/add_game.php?id=' + game.id + '" class="btn btn-primary add-game-btn">Añadir</a>' +
+                                        '<a href="../../../controller/add_game.php?id=' + game.id + '" class="btn btn-primary add-game-btn mt-3">Añadir</a>' +
                                     '</div>' +
                                 '</div>'
                             );

@@ -35,10 +35,10 @@ $user=$user->getUser();
                         <a class="nav-link active" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>collections">Colecciones</a>
+                        <a class="nav-link" href="<?php echo ROOT; ?>collections.php">Colecciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
+                        <a class="nav-link" href="contact.php">Contacto</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

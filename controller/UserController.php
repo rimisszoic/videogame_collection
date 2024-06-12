@@ -37,6 +37,7 @@ class UserController {
 
     public function register()
     {
+        date_default_timezone_set('Europe/Madrid');
         // Verificar si la cookie de fecha de nacimiento está presente
         $dobInvalidCookie=isset($_COOKIE['blocked_dob']) ? true : false;
 
@@ -47,7 +48,7 @@ class UserController {
             $minAge=18;
             $minDate=date('Y-m-d', strtotime("-$minAge years"));
             if($_POST['dob']>$minDate){
-                setcookie('dob_invalid',$_POST['dob'],time()+86400*30,'/'); // Cookie para bloquear el campo de fecha de nacimiento
+                setcookie('dob_invalid',$_POST['dob'],time()+86400,'/'); // Cookie para bloquear el registro
                 header('Location: ' . BASE_URL . '?result=error&msg='.urlencode('Debes tener al menos 18 años para registrarte'));
                 exit();
             } else {
@@ -73,10 +74,9 @@ class UserController {
 
     public function logout()
     {
-        $user= new User();
-        if($user->getUser() === true){
-            $user->unlogUser();
-            header('Location: '.BASE_URL.'?result=ok&msg='.urlencode('El usuario se ha deslogueado correctamente'));
+        $user= User::getUser();
+        if(!empty($user)){
+            $user->unlogUser('El usuario ha cerrado sesión correctamente','ok',true);
         }
     }
     
@@ -84,8 +84,8 @@ class UserController {
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Procesar la solicitud de darse de baja
-            $user = new User();
-            if($user->getUser() === true){
+            $user = User::getUser();
+            if(!empty($user)){
                 $user->deleteUser();
             }
         }

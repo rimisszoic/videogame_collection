@@ -34,7 +34,7 @@ require_once('config/const.php');
                         <a class="nav-link" href="collections.php">Colecciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
+                        <a class="nav-link" href="/videogame_collection/resources/views/contact.php">Contacto</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -45,7 +45,7 @@ require_once('config/const.php');
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                                <li><a class="dropdown-item" href="<?php echo VIEWS.'collections/view_collection?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                                <li><a class="dropdown-item" href="<?php echo VIEWS.'collections/view_collection.php?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
@@ -119,7 +119,7 @@ require_once('config/const.php');
                         </div>
                         <div class="mb-3">
                             <label for="registerDob" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="registerDob" name="dob" required aria-label="Fecha de nacimiento" max="<?php echo date('Y-m-d', strtotime('-14 years')); ?>">
+                            <input type="date" class="form-control" id="registerDob" name="dob" required aria-label="Fecha de nacimiento" max="<?php echo date('Y-m-d', strtotime('-18 years')); ?>">
                             <div id="registerDobHelp" class="form-text"></div>
                         </div>
                         <div class="mb-3">

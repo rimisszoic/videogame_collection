@@ -1,7 +1,7 @@
 <?php
 // Importar configuración y clases necesarias
 require_once(dirname(__DIR__).'/config/const.php');
-require_once(MODELS.'Connection.php');
+require_once(dirname(__DIR__).'/model/Connection.php');
 
 // Verificar si se recibió un término de búsqueda
 if(isset($_POST['search_query'])) {
