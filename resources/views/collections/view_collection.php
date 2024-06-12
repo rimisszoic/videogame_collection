@@ -177,6 +177,7 @@ $_SESSION['user_collection_id']=$_GET['user'];
         </div>
     </div>
 
+    <?php if(isset($_SESSION['user_id']) && $_GET['user'] == $_SESSION['user_id']): ?>
     <!-- Formulario de búsqueda -->
     <div class="container mt-3">
         <form id="search-form" method="POST">
@@ -192,7 +193,6 @@ $_SESSION['user_collection_id']=$_GET['user'];
     </div>
 
     <!-- Formulario para registrar un juego -->
-    <?php if($_GET['user'] == $_SESSION['user_id']): ?>
     <div class="container mt-3" id="register-game-form-container" style="display: none;">
         <h2 class="mb-3">Registrar Nuevo Juego</h2>
         <form id="register-game-form" method="POST" enctype="multipart/form-data" action="../../../controller/register_game.php">
