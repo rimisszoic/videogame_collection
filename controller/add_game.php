@@ -52,7 +52,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_collection_id']) && ($_
     }
 
     // Redirigir con el mensaje de error si ocurrió algún problema
-    header("Location: videogame_collection/resources/views/collections/view_collection.php?user={$_SESSION['user_id']}&result=error&msg=" . urlencode($errorMessage));
+    header("Location: /videogame_collection/resources/views/collections/view_collection.php?user={$_SESSION['user_id']}&result=error&msg=" . urlencode($errorMessage));
     exit();
 } else {
     // Redirigir al usuario a la página de inicio de sesión si no ha iniciado sesión

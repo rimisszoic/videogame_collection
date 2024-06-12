@@ -73,7 +73,7 @@ $_SESSION['user_collection_id']=$_GET['user'];
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/../../../router.php" method="post">
+                    <form action="/videogame_collection/router.php" method="post">
                         <div class="mb-3">
                             <label for="loginNick" class="form-label">Nick</label>
                             <input type="text" class="form-control" id="loginNick" name="nick" required aria-label="Nombre de usuario">
@@ -110,7 +110,7 @@ $_SESSION['user_collection_id']=$_GET['user'];
                 </div>
                 <div class="modal-body">
                     <?php $dobInvalidCookie=isset($_COOKIE['dob_invalid']) ? true : false; ?>
-                    <form action="/../../../router.php" method="post" <?php if ($dobInvalidCookie) echo 'onsubmit="return false"'; ?>>
+                    <form action="/videogame_collection/router.php" method="post" <?php if ($dobInvalidCookie) echo 'onsubmit="return false"'; ?>>
                         <div class="mb-3">
                             <label for="registerName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="registerName" name="name" required aria-label="Nombre">

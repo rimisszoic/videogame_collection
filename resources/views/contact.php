@@ -3,7 +3,7 @@
 if(session_status() == PHP_SESSION_NONE){
     session_start();
 }
-require_once(dirname(__DIR__,3).'/config/const.php');
+require_once(dirname(__DIR__,2).'/config/const.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,7 +12,7 @@ require_once(dirname(__DIR__,3).'/config/const.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -89,7 +89,7 @@ require_once(dirname(__DIR__,3).'/config/const.php');
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="../../bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/jquery/jquery-3.7.1.min.js"></script>
+    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/jquery/jquery-3.7.1.min.js"></script>
 </body>
 </html>
