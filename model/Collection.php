@@ -67,8 +67,7 @@ class Collection
             foreach ($this->collections as $collection) {
                 echo '<div class="col">';
                 echo '<div class="card h-100">';
-                // Cambia la URL por la ruta de tu imagen de fondo
-                echo '<div class="card-img-top" style="background-image: url(\'ruta_de_la_imagen\'); height: 200px; background-size: cover;"></div>';
+                echo '<div class="card-img-top" style="background-image: url(\'/videogame_collection/resources/uploads/collection_back.png\'); height: 200px; background-size: cover;"></div>';
                 echo '<div class="card-body">';
                 echo '<h5 class="card-title">' . $collection['username'] . '</h5>';
                 echo '<p class="card-text">Número de juegos: ' . $collection['numberOfGames'] . '</p>';
