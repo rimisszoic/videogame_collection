@@ -44,10 +44,10 @@ require_once('config/const.php');
                                 <?php echo ucfirst($_SESSION['user_nick']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="router.php?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
-                                <li><a class="dropdown-item" href="/user/collection"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
+                                <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="<?php echo VIEWS.'collections/view_collection?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/user/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                                <li><a class="dropdown-item" href="<?php echo ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
@@ -69,7 +69,7 @@ require_once('config/const.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="router.php" method="post">
+                    <form action="<?php echo ROUTER; ?>" method="post">
                         <div class="mb-3">
                             <label for="loginNick" class="form-label">Nick</label>
                             <input type="text" class="form-control" id="loginNick" name="nick" required aria-label="Nombre de usuario">
@@ -106,7 +106,7 @@ require_once('config/const.php');
                 </div>
                 <div class="modal-body">
                     <?php $dobInvalidCookie=isset($_COOKIE['dob_invalid']) ? true : false; ?>
-                    <form action="router.php" method="post" <?php if ($dobInvalidCookie) echo 'onsubmit="return false"'; ?>>
+                    <form action="<?php echo ROUTER; ?>" method="post" <?php if ($dobInvalidCookie) echo 'onsubmit="return false"'; ?>>
                         <div class="mb-3">
                             <label for="registerName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="registerName" name="name" required aria-label="Nombre">
