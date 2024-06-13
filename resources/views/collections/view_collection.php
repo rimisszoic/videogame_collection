@@ -180,20 +180,22 @@ $_SESSION['user_collection_id']=$_GET['user'];
     <?php if(isset($_SESSION['user_id']) && $_GET['user'] == $_SESSION['user_id']): ?>
     <!-- Formulario de búsqueda -->
     <div class="container-fluid mt-3">
-        <form id="search-form" method="POST">
-            <input type="text" id="search-query" name="search_query" placeholder="Buscar juego...">
-            <button type="submit">Buscar</button>
-        </form>
+        <div class="d-flex justify-content-center">
+            <form id="search-form" method="POST">
+                <input type="text" id="search-query" name="search_query" placeholder="Buscar juego...">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
     </div>
 
-    <!-- Lista de juegos en la colección -->
+    <!-- Lista de juegos encontrados -->
     <div class="container-fluid mt-3 mb-3" id="search-results-container" style="display: none;">
-        <h2 class="mb-3">Resultados de la Búsqueda</h2>
-        <div id="search-results"></div>
+        <h2 class="mt-3 mb-3 text-center">Resultados de la Búsqueda</h2>
+        <div id="search-results" class="container-fluid mt-3 mb-3"></div>
     </div>
 
     <!-- Formulario para registrar un juego -->
-    <div class="container mt-3" id="register-game-form-container" style="display: none;">
+    <div class="container-fluid mt-3" id="register-game-form-container" style="display: none;">
         <h2 class="mb-3">Registrar Nuevo Juego</h2>
         <form id="register-game-form" method="POST" enctype="multipart/form-data" action="../../../controller/register_game.php">
             <div class="mb-3">
@@ -223,10 +225,9 @@ $_SESSION['user_collection_id']=$_GET['user'];
             <div class="mb-3">
                 <label for="cover" class="form-label">Portada</label>
                 <input type="file" class="form-control" id="cover" name="cover" required aria-label="Portada" onchange="previewImage(event)">
-                <small id="coverHelp" class="form-text text-muted">Haz clic en la imagen para verla en tamaño completo.</small>
             </div>
             <!-- Vista previa de la imagen -->
-            <div id="coverPreviewContainer" style="display: none;">
+            <div id="coverPreviewContainer" class="mb-3" style="display: none;">
                 <label>Vista Previa:</label>
                 <img id="coverPreview" src="#" alt="Vista previa de la portada del juego" class="img-fluid" style="max-width: 200px;">
             </div>

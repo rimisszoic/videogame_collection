@@ -56,8 +56,8 @@ class ViewCollectionController {
             }
 
             // Mostrar los juegos en forma de tabla
-            echo "<h2 class='text-center'>Colección de Juegos</h2>";
-            echo "<div class='container-fluid d-flex justify-content-center'>";
+            echo "<h2 class='text-center mt-3 mb-3'>Colección de Juegos</h2>";
+            echo "<div class='container-fluid d-flex justify-content-center mt-3 mb-3'>";
             echo "<div class='table-responsive'>";
             echo "<table class='table'>";
             echo "<thead>";
