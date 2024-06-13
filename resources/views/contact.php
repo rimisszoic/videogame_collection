@@ -27,13 +27,13 @@ require_once(dirname(__DIR__,2).'/config/const.php');
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="<?php echo BASE_URL; ?>">Inicio</a>
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/videogame_collection/collections.php">Colecciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Contacto</a>
+                        <a class="nav-link active" aria-current="page" href="/videogame_collection/resources/views/contact.php">Contacto</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -43,10 +43,10 @@ require_once(dirname(__DIR__,2).'/config/const.php');
                                 <?php echo ucfirst($_SESSION['user_nick']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="<?php ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" href="/videogame_collection/router.php?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
                                 <li><a class="dropdown-item" href="<?php VIEWS.'/collections/view_collection?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="../../router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                                <li><a class="dropdown-item" href="/videogame_collection/router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
@@ -201,10 +201,12 @@ require_once(dirname(__DIR__,2).'/config/const.php');
         </form>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/jquery/jquery-3.7.1.min.js"></script>
-    <script src="../js/bootstrap-notify/bootstrap-notify.min.js"></script>
-    <script src="../js/notifications.js"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Notify JavaScript -->
+    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="<?php echo JS; ?>notifications.js"></script>
 </body>
 </html>

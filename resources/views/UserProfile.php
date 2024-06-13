@@ -35,10 +35,10 @@ $user=$user->getUser();
                         <a class="nav-link active" href="<?php echo BASE_URL; ?>">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo ROOT; ?>collections.php">Colecciones</a>
+                        <a class="nav-link" href="/videogame_collection/collections.php">Colecciones</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contact.php">Contacto</a>
+                        <a class="nav-link" href="/videogame_collection/resources/views/contact.php">Contacto</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -48,10 +48,10 @@ $user=$user->getUser();
                                 <?php echo ucfirst($_SESSION['user_nick']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" aria-current="page" href="<?php ROUTER; ?>?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
+                                <li><a class="dropdown-item" aria-current="page" href="/videogame_collection/router.php?action=user-profile"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Perfil</a></li>
                                 <li><a class="dropdown-item" href="<?php VIEWS.'/collections/view_collection?user='.$_SESSION['user_id']; ?>"><i class="fa fa-folder"></i>&nbsp;Colección</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?php ROUTER; ?>?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
+                                <li><a class="dropdown-item" href="/videogame_collection/router.php?action=logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     <?php endif; ?>
@@ -64,7 +64,7 @@ $user=$user->getUser();
     <div class="container-fluid mt-5">
         <h1>Perfil de Usuario</h1>
         <!-- Formulario de perfil de usuario -->
-        <form id="profileForm" action="<?php echo ROUTER ?>?action=updateProfile" method="post">
+        <form id="profileForm" action="/videogame_collection/router.php?action=updateProfile" method="post">
             <!-- Campos del formulario -->
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
@@ -135,7 +135,7 @@ $user=$user->getUser();
                     <!-- Botón para cancelar la eliminación -->
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <!-- Botón para confirmar la eliminación -->
-                    <form action="<?php echo ROUTER; ?>" method="post">
+                    <form action="/videogame_collection/router.php" method="post">
                         <input type="hidden" name="action" value="delete-account">
                         <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
                     </form>
@@ -146,12 +146,12 @@ $user=$user->getUser();
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
-    <!-- SweetAlert -->
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- jQuery -->
-    <script src="../js/jquery/jquery-3.7.1.min.js"></script>
-    <script src="../js/bootstrap-notify/bootstrap-notify.min.js"></script>
-    <script src="<?php echo JS ?>notifications.js"></script>
-    <script src="<?php echo JS; ?>/user-profile.js"></script>
+    <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Notify JavaScript -->
+    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="<?php echo JS; ?>notifications.js"></script>
+    <!-- User Profile JavaScript -->
+    <script src="<?php echo JS; ?>user-profile.js"></script>
 </body>
 </html>

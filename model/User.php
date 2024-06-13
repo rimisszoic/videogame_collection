@@ -266,7 +266,7 @@ class User {
      * Método para obtener un usuario.
      * @return self|bool Usuario o false si no se encuentra el usuario.
      */
-    public static function getUser(): self|bool{
+    public static function getUser(){
         try{
             $conn = new Connection();
             $conn->connect();

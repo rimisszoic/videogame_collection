@@ -84,7 +84,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
             break;
         case 'user-profile':
             if($_SERVER['REQUEST_METHOD'] == 'GET' && isAuthenticated()){
-                handle_request('UserController', 'register');
+                handle_request('UserProfileController', 'index');
             }
             break;
         case 'update-profile':
@@ -109,3 +109,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET'){
             break;
     }
 }
+?>
