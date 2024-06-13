@@ -49,7 +49,7 @@ class ViewCollectionController {
 
             // Verificar si la colección está vacía
             if (empty($games)) {
-                echo "<div class='container mt-3'>";
+                echo "<div class='container-fluid mt-3'>";
                 echo "<div class='alert alert-info' role='alert'>La colección está vacía. ¡Agrega juegos para empezar!</div>";
                 echo "</div>";
                 return;
@@ -57,7 +57,8 @@ class ViewCollectionController {
 
             // Mostrar los juegos en forma de tabla
             echo "<h2 class='text-center'>Colección de Juegos</h2>";
-            echo "<div class='container d-flex justify-content-center'>";
+            echo "<div class='container-fluid d-flex justify-content-center'>";
+            echo "<div class='table-responsive'>";
             echo "<table class='table'>";
             echo "<thead>";
             echo "<tr>";
@@ -80,6 +81,7 @@ class ViewCollectionController {
             }
             echo "</tbody>";
             echo "</table>";
+            echo "</div>";
             echo "</div>";
 
             // Modal para mostrar la imagen en tamaño completo

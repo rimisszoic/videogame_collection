@@ -183,7 +183,7 @@ $collectionModel->getCollections();
     </div>
 
     <!-- Collections -->
-    <div class="container mt-4">
+    <div class="container-fluid mt-4">
         <h1 class="text-center">Colecciones</h1>
         <?php $collectionModel->renderCollections(); ?>
     </div>
