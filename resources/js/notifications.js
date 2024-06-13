@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    // Función para obtener los parámetros de la URL
+    // Función para obtener los parámetros específicos de la URL
     function getUrlParameter(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
         var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -7,13 +7,13 @@ $(document).ready(function() {
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     };
 
-    // Verificar si hay parámetros result y msg en la URL
+    // Obtener los parámetros result y msg de la URL
     var result = getUrlParameter('result');
     var msg = getUrlParameter('msg');
 
-    // Si hay un resultado y un mensaje, mostrar la notificación correspondiente
+    // Verificar si hay parámetros result y msg en la URL
     if (result && msg) {
-        if(result==='ok'){
+        if (result === 'ok') {
             showSuccessNotification(msg);
         } else {
             showErrorNotification(msg);
@@ -24,7 +24,7 @@ $(document).ready(function() {
     function showSuccessNotification(msg) {
         $.notify({
             title: '<strong>Éxito</strong>',
-            message: "<br>"+msg,
+            message: "<br>" + msg,
             icon: 'glyphicon glyphicon-ok',
         }, {
             type: 'success',
@@ -48,7 +48,7 @@ $(document).ready(function() {
     function showErrorNotification(msg) {
         $.notify({
             title: '<strong>Error</strong>',
-            message: "<br>"+msg,
+            message: "<br>" + msg,
             icon: 'glyphicon glyphicon-remove',
         }, {
             type: 'danger',

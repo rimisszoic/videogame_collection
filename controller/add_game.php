@@ -1,6 +1,6 @@
 <?php
 // Importar configuración y clases necesarias
-require_once(dirname(__DIR__).'/config/const.php');
+require_once(dirname(__DIR__) . '/config/const.php');
 
 session_start(); // Asegurar que la sesión esté iniciada
 
@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_collection_id']) && ($_
 
                 if ($stmt->execute()) {
                     // Redirigir a la página de la colección del usuario después de registrar el juego
-                    header("Location: /videogame_collection/resources/views/collections/view_collection.php?user={$_SESSION['user_id']}");
+                    header("Location: /videogame_collection/resources/views/collections/view_collection.php?user={$_SESSION['user_id']}&result=ok&msg=" . urlencode("Juego registrado con éxito."));
                     exit();
                 } else {
                     // Manejar errores de ejecución
@@ -42,9 +42,11 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_collection_id']) && ($_
                 $errorMessage = "No se encontró la colección del usuario.";
             }
         } catch (PDOException $e) {
+            $errorMessage="Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.";
             // Manejar errores de conexión y de consulta
-            error_log("Database Error: " . $e->getMessage(), 3, LOGS . 'errors.log');
-            $errorMessage = "Error en la base de datos: " . $e->getMessage();
+            $message="Error en la base de datos: " . $e->getMessage();
+            $log = "[" . date('Y-m-d H:i:s') . "] " . $message . PHP_EOL;
+            error_log($log, 3, LOGS . 'errors.log');
         }
     } else {
         // Manejar el caso donde el ID del juego no es válido
@@ -56,7 +58,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_collection_id']) && ($_
     exit();
 } else {
     // Redirigir al usuario a la página de inicio de sesión si no ha iniciado sesión
-    header("Location: " . BASE_URL);
+    header("Location: ".BASE_URL ."?result=error&msg=" . urlencode("Debes iniciar sesión."));
     exit();
 }
 ?>
