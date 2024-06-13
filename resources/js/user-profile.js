@@ -50,3 +50,8 @@ function cancelEdit() {
     document.getElementById('saveChangesBtn').style.display = 'none';
     document.getElementById('cancelEditBtn').style.display = 'none';
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('editProfileBtn').addEventListener('click', editProfile);
+    document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
+});

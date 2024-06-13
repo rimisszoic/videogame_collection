@@ -16,9 +16,9 @@ define('ROUTER', '/videogame_collection/router.php');
 
 /* Constantes para la base de datos */
 define('DB_HOST','localhost');
-define('DB_USER','gam3Coll@bUs3r');
+define('DB_USER','rmissgames_gam3Coll4bUs3r');
 define('DB_PWD','J4nR#9!pQz_23Ld');
-define('DBNAME','videogame_collection');
+define('DBNAME','rmissgames_videogame_collection');
 define('ADMIN_EMAIL','rimiss@rimisszoic.live');
 
 /* Constantes para los emails */

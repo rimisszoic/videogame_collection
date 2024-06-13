@@ -202,11 +202,11 @@ require_once(dirname(__DIR__,2).'/config/const.php');
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
-    <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
+    <script src="/videogame_collection/<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
-    <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+    <script src="/videogame_collection/<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap Notify JavaScript -->
-    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
-    <script src="<?php echo JS; ?>notifications.js"></script>
+    <script src="/videogame_collection/<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="/videogame_collection/<?php echo JS; ?>notifications.js"></script>
 </body>
 </html>
