@@ -145,7 +145,7 @@ $user=$user->getUser();
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
-    <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo BOOTSTRAP; ?>js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap Notify JavaScript -->
