@@ -1,11 +1,6 @@
 <?php
 // controller/contact.php
-require_once(dirname(__DIR__).'/resources/mailer/src/PHPMailer.php');
-require_once(dirname(__DIR__).'/resources/mailer/src/Exception.php');
-require_once(dirname(__DIR__).'/resources/mailer/src/SMTP.php');
-require_once(dirname(__DIR__).'/resources/mailer/Mailer.php');
-
-use PHPMailer\PHPMailer\Exception;
+require_once(dirname(__DIR__).'/model/Mailer.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = htmlspecialchars(trim($_POST['name']));
@@ -26,17 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $altBody = "Nombre: $name\nCorreo electrónico: $email\nMensaje:\n$message";
             $mailer->sendMail('rimiss@rimisszoic.live',$subject,$body,$altBody);
             $success = "Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.";
+            header("Location: /videogame_collection/index.php?result=ok&msg" . urlencode($success));
+            exit();
         } catch (Exception $e) {
             $error = $e->getMessage();
+            header("Location: /videogame_collection/index.php?result=error&msg" . urlencode($error));
+            exit();
         }
     }
-
-    // Redirigir con el resultado
-    if (isset($error)) {
-        header("Location: ../view/contact.php?result=ok&msg" . urlencode($error));
-    } else {
-        header("Location: ../view/contact.php?result=error&msg" . urlencode($success));
-    }
-    exit();
 }
 ?>

@@ -1,7 +1,8 @@
 <?php
-require_once(RESOURCES.'mailer/src/PHPMailer.php');
-require_once(RESOURCES.'mailer/src/Exception.php');
-require_once(RESOURCES.'mailer/src/SMTP.php');
+require_once(dirname(__DIR__).'/resources/mailer/src/PHPMailer.php');
+require_once(dirname(__DIR__).'/resources/mailer/src/Exception.php');
+require_once(dirname(__DIR__).'/resources/mailer/src/SMTP.php');
+require_once(dirname(__DIR__).'/config/const.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

@@ -61,7 +61,7 @@ $user=$user->getUser();
     </nav>
 
 
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <h1>Perfil de Usuario</h1>
         <!-- Formulario de perfil de usuario -->
         <form id="profileForm" action="<?php echo ROUTER ?>?action=updateProfile" method="post">
@@ -109,7 +109,7 @@ $user=$user->getUser();
         </form>
     </div>
 
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <h2>Eliminar Cuenta</h2>
         <p>Si decides eliminar tu cuenta, todos tus datos y colecciones serán eliminados de forma permanente.</p>
 
@@ -146,10 +146,12 @@ $user=$user->getUser();
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- jQuery -->
+    <script src="../js/jquery/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap-notify/bootstrap-notify.min.js"></script>
     <script src="<?php echo JS ?>notifications.js"></script>
-
-
     <script src="<?php echo JS; ?>/user-profile.js"></script>
 </body>
 </html>

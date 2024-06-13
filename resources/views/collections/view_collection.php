@@ -179,7 +179,7 @@ $_SESSION['user_collection_id']=$_GET['user'];
 
     <?php if(isset($_SESSION['user_id']) && $_GET['user'] == $_SESSION['user_id']): ?>
     <!-- Formulario de búsqueda -->
-    <div class="container mt-3">
+    <div class="container-fluid mt-3">
         <form id="search-form" method="POST">
             <input type="text" id="search-query" name="search_query" placeholder="Buscar juego...">
             <button type="submit">Buscar</button>
@@ -187,7 +187,7 @@ $_SESSION['user_collection_id']=$_GET['user'];
     </div>
 
     <!-- Lista de juegos en la colección -->
-    <div class="container mt-3 mb-3" id="search-results-container" style="display: none;">
+    <div class="container-fluid mt-3 mb-3" id="search-results-container" style="display: none;">
         <h2 class="mb-3">Resultados de la Búsqueda</h2>
         <div id="search-results"></div>
     </div>
@@ -260,7 +260,7 @@ $_SESSION['user_collection_id']=$_GET['user'];
     <!-- Bootstrap y scripts -->
     <script src="../../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/jquery/jquery-3.7.1.min.js"></script>
-    <script src="../../bootstrap/js/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="../../js/bootstrap-notify/bootstrap-notify.min.js"></script>
     <script src="../../js/notifications.js"></script>
     <script src="../../js/passwords.js"></script>
     <script>

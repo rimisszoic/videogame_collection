@@ -59,8 +59,121 @@ require_once(dirname(__DIR__,2).'/config/const.php');
         </div>
     </nav>
 
+        <!-- Login Modal -->
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/videogame_collection/router.php" method="post">
+                        <div class="mb-3">
+                            <label for="loginNick" class="form-label">Nick</label>
+                            <input type="text" class="form-control" id="loginNick" name="nick" required aria-label="Nombre de usuario">
+                            <div id="loginNickHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="loginPassword" name="password" required aria-label="Contraseña" onpaste="return false">
+                                <button class="btn btn-outline-secondary password-toggle-icon" type="button" id="loginPasswordToggle" aria-label="Mostrar contraseña">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div id="loginPasswordHelp" class="form-text"></div>
+                        </div>
+                        <input type="hidden" name="action" value="login">
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate aquí</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Registrarse</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <?php $dobInvalidCookie=isset($_COOKIE['dob_invalid']) ? true : false; ?>
+                    <form action="/videogame_collection/router.php" method="post" <?php if ($dobInvalidCookie) echo 'onsubmit="return false"'; ?>>
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="registerName" name="name" required aria-label="Nombre">
+                            <div id="registerNameHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerNick" class="form-label">Nick</label>
+                            <input type="text" class="form-control" id="registerNick" name="nick" required aria-label="Nombre de usuario">
+                            <div id="registerNickHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerDob" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="registerDob" name="dob" required aria-label="Fecha de nacimiento" max="<?php echo date('Y-m-d', strtotime('-14 years')); ?>">
+                            <div id="registerDobbHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" required aria-label="Correo electrónico">
+                            <div id="registerEmailHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="registerPassword" name="registerPassword" required aria-label="Contraseña" onpaste="return false">
+                                <button class="btn btn-outline-secondary password-toggle-icon" type="button" id="registerPasswordToggle" aria-label="Mostrar contraseña">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength mb-3">
+                                <div class="strength-bar"></div>
+                                <div class="strength-text"></div>
+                            </div>
+                            <div class="pswd_info">
+                                <div class="notify error">La contraseña debe cumplir los siguientes requisitos:</div>
+                                <ul>
+                                    <li id="letter" class="invalid">Al menos <strong>una letra</strong></li>
+                                    <li id="capital" class="invalid">Al menos <strong>una letra mayúscula</strong></li>
+                                    <li id="number" class="invalid">Al menos <strong>un número</strong></li>
+                                    <li id="length" class="invalid">Al menos <strong>8 caracteres</strong></li>
+                                    <li id="match" class="invalid">Las contraseñas <strong>deben coincidir</strong></li>
+                                    <li id="blank" class="invalid">Las contraseñas <strong>no deben tener espacios</strong></li>
+                                </ul>
+                            </div>
+                            <div id="registerPasswordHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required aria-label="Confirmar contraseña" onpaste="return false">
+                                <button class="btn btn-outline-secondary password-toggle-icon" type="button" id="confirmPasswordToggle" aria-label="Mostrar contraseña">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div id="confirmPasswordHelp" class="form-text"></div>
+                        </div>
+                        <input type="hidden" name="action" value="register">
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>¿Ya tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Inicia sesión aquí</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Contact Form -->
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <h2 class="text-center mb-4">Contáctanos</h2>
         <?php if (isset($_GET['error'])): ?>
             <div class="alert alert-danger" role="alert">
@@ -71,7 +184,7 @@ require_once(dirname(__DIR__,2).'/config/const.php');
                 <?php echo htmlspecialchars($_GET['success']); ?>
             </div>
         <?php endif; ?>
-        <form id="contact-form" method="POST" action="../../../controller/contact.php">
+        <form id="contact-form" method="POST" action="../../controller/contact.php">
             <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="name" name="name" required>
@@ -91,5 +204,7 @@ require_once(dirname(__DIR__,2).'/config/const.php');
     <!-- Bootstrap JS -->
     <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="../js/jquery/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="../js/notifications.js"></script>
 </body>
 </html>
