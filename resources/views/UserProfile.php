@@ -146,10 +146,12 @@ $user=$user->getUser();
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="<?php echo JS ?>notifications.js"></script>
-
-
+    <!-- jQuery -->
+    <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Notify JavaScript -->
+    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="<?php echo JS; ?>notifications.js"></script>
+    <!-- User Profile JavaScript -->
     <script src="<?php echo JS; ?>/user-profile.js"></script>
 </body>
 </html>

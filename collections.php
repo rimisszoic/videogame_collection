@@ -187,5 +187,13 @@ $collectionModel->getCollections();
         <h1 class="text-center">Colecciones</h1>
         <?php $collectionModel->renderCollections(); ?>
     </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Notify JavaScript -->
+    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="<?php echo JS; ?>notifications.js"></script>
 </body>
 </html>

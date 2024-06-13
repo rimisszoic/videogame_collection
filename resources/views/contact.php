@@ -88,8 +88,12 @@ require_once(dirname(__DIR__,2).'/config/const.php');
         </form>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/jquery/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="<?php echo BOOTSTRAP; ?>/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="<?php echo JS; ?>jquery/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Notify JavaScript -->
+    <script src="<?php echo JS; ?>bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="<?php echo JS; ?>notifications.js"></script>
 </body>
 </html>
