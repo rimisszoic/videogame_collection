@@ -172,6 +172,45 @@ require_once('config/const.php');
             </div>
         </div>
     </div>
+    <!-- Main Content -->
+    <main class="container-fluid mt-5">
+        <div class="row">
+            <!-- Section: Welcome Message -->
+            <div class="col-12 text-center mb-4">
+                <h1>Bienvenido a Game Archive</h1>
+                <p>Tu destino definitivo para coleccionar, descubrir y compartir videojuegos. Aquí, podrás explorar una vasta colección de juegos, desde clásicos retro hasta las últimas novedades, en múltiples plataformas.</p>
+            </div>
+
+            <!-- Section: Features -->
+            <div class="col-12">
+                <h2 class="text-center mb-4">Características Principales</h2>
+                <div class="row text-center">
+                    <div class="col-md-4 mb-4">
+                        <i class="fa fa-gamepad fa-3x" aria-hidden="true"></i>
+                        <h3>Explora</h3>
+                        <p>Descubre una amplia variedad de juegos organizados por género, plataforma y fecha de lanzamiento.</p>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <i class="fa fa-star fa-3x" aria-hidden="true"></i>
+                        <h3>Valora</h3>
+                        <p>Valora y comenta tus juegos favoritos para ayudar a otros usuarios a descubrir nuevas joyas.</p>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+                        <h3>Comparte</h3>
+                        <p>Crea tu propia colección y compártela con la comunidad. Conecta con otros apasionados de los videojuegos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Join the Community -->
+            <div class="col-12 text-center mt-5">
+                <h2>Únete a la Comunidad</h2>
+                <p>Regístrate hoy y empieza a construir tu colección personal de videojuegos.</p>
+                <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate</a>
+            </div>
+        </div>
+    </main>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="<?php echo BOOTSTRAP; ?>js/bootstrap.bundle.min.js"></script>
