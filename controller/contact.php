@@ -21,11 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $altBody = "Nombre: $name\nCorreo electrónico: $email\nMensaje:\n$message";
             $mailer->sendMail('rimiss@rimisszoic.live',$subject,$body,$altBody);
             $success = "Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.";
-            header("Location: /videogame_collection/index.php?result=ok&msg" . urlencode($success));
+            header("Location: /videogame_collection/index.php?result=ok&msg=" . urlencode($success));
             exit();
         } catch (Exception $e) {
             $error = $e->getMessage();
-            header("Location: /videogame_collection/index.php?result=error&msg" . urlencode($error));
+            header("Location: /videogame_collection/index.php?result=error&msg=" . urlencode($error));
             exit();
         }
     }
