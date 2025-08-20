@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/rmissgames/noelperez.rimisszoic.live/videogame_collection
-    - /bin/cp -R * $DEPLOYPATH/change_permissions.sh
