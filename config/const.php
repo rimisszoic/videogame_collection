@@ -24,5 +24,5 @@ define('ADMIN_EMAIL','email del administrador');
 /* Constantes para los emails */
 define('EMAIL_HOST','tu dominio');
 define('EMAIL_USER','email');
-define('EMAIL_PWD','contraseña;
+define('EMAIL_PWD','contraseña');
 ?>
